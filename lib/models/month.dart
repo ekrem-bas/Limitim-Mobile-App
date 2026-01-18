@@ -1,33 +1,33 @@
 import 'package:hive/hive.dart';
-import 'package:equatable/equatable.dart';
 
 part 'month.g.dart';
 
 @HiveType(typeId: 1)
-class Month extends Equatable {
+class Month {
   @HiveField(0)
   final String id;
 
   @HiveField(1)
-  final String name; // Örn: "Haziran - Temmuz"
+  String name; // Başta "Aktif" olabilir, kaydedince kullanıcı seçer
 
   @HiveField(2)
-  final double limit; // Belirlenen bütçe limiti
+  final double limit;
 
   @HiveField(3)
-  final DateTime startDate; // Sıralama ve filtreleme için gerçek tarih
+  bool isDraft; // true: Ana ekranda aktif, false: Geçmişe kaydedilmiş
 
   @HiveField(4)
-  final int year;
+  int? year;
 
-  const Month({
+  @HiveField(5)
+  final DateTime createdAt;
+
+  Month({
     required this.id,
     required this.name,
     required this.limit,
-    required this.startDate,
-    required this.year,
+    this.isDraft = true,
+    this.year,
+    required this.createdAt,
   });
-
-  @override
-  List<Object?> get props => [id, name, limit, startDate, year];
 }

@@ -20,15 +20,16 @@ class MonthAdapter extends TypeAdapter<Month> {
       id: fields[0] as String,
       name: fields[1] as String,
       limit: fields[2] as double,
-      startDate: fields[3] as DateTime,
-      year: fields[4] as int,
+      isDraft: fields[3] as bool,
+      year: fields[4] as int?,
+      createdAt: fields[5] as DateTime,
     );
   }
 
   @override
   void write(BinaryWriter writer, Month obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -36,9 +37,11 @@ class MonthAdapter extends TypeAdapter<Month> {
       ..writeByte(2)
       ..write(obj.limit)
       ..writeByte(3)
-      ..write(obj.startDate)
+      ..write(obj.isDraft)
       ..writeByte(4)
-      ..write(obj.year);
+      ..write(obj.year)
+      ..writeByte(5)
+      ..write(obj.createdAt);
   }
 
   @override
