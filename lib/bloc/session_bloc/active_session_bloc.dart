@@ -28,25 +28,29 @@ class ActiveSessionBloc extends Bloc<ActiveSessionEvent, ActiveSessionState> {
     Emitter<ActiveSessionState> emit,
   ) {
     // check if the session is active
-    if (repository.getActiveSession() != null) {
-      final activeSession = repository.getActiveSession()!;
-      final expenses = repository.getExpensesForMonth(activeSession.id);
-      final totalSpent = expenses.fold(
-        0.0,
-        (sum, expense) => sum + expense.amount,
-      );
-      final remainingLimit = activeSession.limit - totalSpent;
+    try {
+      if (repository.getActiveSession() != null) {
+        final activeSession = repository.getActiveSession()!;
+        final expenses = repository.getExpensesForMonth(activeSession.id);
+        final totalSpent = expenses.fold(
+          0.0,
+          (sum, expense) => sum + expense.amount,
+        );
+        final remainingLimit = activeSession.limit - totalSpent;
 
-      emit(
-        SessionActive(
-          activeMonth: activeSession,
-          expenses: expenses,
-          totalSpent: totalSpent,
-          remainingLimit: remainingLimit,
-        ),
-      );
-    } else {
-      emit(NoActiveSession());
+        emit(
+          SessionActive(
+            activeMonth: activeSession,
+            expenses: expenses,
+            totalSpent: totalSpent,
+            remainingLimit: remainingLimit,
+          ),
+        );
+      } else {
+        emit(NoActiveSession());
+      }
+    } catch (e) {
+      emit(SessionError('Failed to load active session: $e'));
     }
   }
 
@@ -55,10 +59,14 @@ class ActiveSessionBloc extends Bloc<ActiveSessionEvent, ActiveSessionState> {
     Emitter<ActiveSessionState> emit,
   ) async {
     // start a new session
-    await repository.startNewSession(event.limit);
+    try {
+      await repository.startNewSession(event.limit);
 
-    // call check active session to refresh state
-    add(CheckActiveSession());
+      // call check active session to refresh state
+      add(CheckActiveSession());
+    } catch (e) {
+      emit(SessionError('Failed to start new session: $e'));
+    }
   }
 
   FutureOr<void> _onAddExpenseEvent(
@@ -66,44 +74,56 @@ class ActiveSessionBloc extends Bloc<ActiveSessionEvent, ActiveSessionState> {
     Emitter<ActiveSessionState> emit,
   ) async {
     // add expense via repository
-    await repository.addExpense(
-      Expense(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        monthId: repository.getActiveSession()!.id,
-        title: event.title,
-        amount: event.amount,
-        date: DateTime.now(),
-      ),
-    );
+    try {
+      await repository.addExpense(
+        Expense(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          monthId: repository.getActiveSession()!.id,
+          title: event.title,
+          amount: event.amount,
+          date: DateTime.now(),
+        ),
+      );
 
-    // call check active session to refresh state
-    add(CheckActiveSession());
+      // call check active session to refresh state
+      add(CheckActiveSession());
+    } catch (e) {
+      emit(SessionError('Failed to add expense: $e'));
+    }
   }
 
   FutureOr<void> _onDeleteExpenseEvent(
     DeleteExpenseEvent event,
     Emitter<ActiveSessionState> emit,
   ) async {
-    // delete expense via repository
-    await repository.deleteExpense(event.expenseId);
+    try {
+      // delete expense via repository
+      await repository.deleteExpense(event.expenseId);
 
-    // call check active session to refresh state
-    add(CheckActiveSession());
+      // call check active session to refresh state
+      add(CheckActiveSession());
+    } catch (e) {
+      emit(SessionError('Failed to delete expense: $e'));
+    }
   }
 
   FutureOr<void> _onFinalizeSession(
     FinalizeSessionEvent event,
     Emitter<ActiveSessionState> emit,
   ) async {
-    // finalize session via repository
-    final activeSession = repository.getActiveSession()!;
-    await repository.finalizeSession(
-      monthId: activeSession.id,
-      finalName: event.monthName,
-      finalYear: event.year,
-    );
+    try {
+      // finalize session via repository
+      final activeSession = repository.getActiveSession()!;
+      await repository.finalizeSession(
+        monthId: activeSession.id,
+        finalName: event.monthName,
+        finalYear: event.year,
+      );
 
-    // emit no active session state
-    emit(NoActiveSession());
+      // emit no active session state
+      emit(NoActiveSession());
+    } catch (e) {
+      emit(SessionError('Failed to finalize session: $e'));
+    }
   }
 }

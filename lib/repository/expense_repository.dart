@@ -6,18 +6,18 @@ class ExpenseRepository {
   Box<Month> get _monthBox => Hive.box<Month>('months');
   Box<Expense> get _expenseBox => Hive.box<Expense>('expenses');
 
-  // --- OTURUM (TASLAK) YÖNETİMİ ---
+  // --- SESSION (DRAFT) MANAGEMENT ---
 
-  // Şu an aktif bir harcama oturumu (limit belirlenmiş mi) var mı?
+  // Is there currently an active spending session (limit set)?
   Month? getActiveSession() {
     try {
       return _monthBox.values.firstWhere((month) => month.isDraft == true);
     } catch (e) {
-      return null; // Eğer taslak yoksa null döner (State 1: Limit İste)
+      return null; // If no draft exists, return null (State 1: Request Limit)
     }
   }
 
-  // Yeni oturum başlat (Kullanıcı limit belirlediğinde)
+  // Start new session with given limit
   Future<void> startNewSession(double limit) async {
     final newMonth = Month(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -29,7 +29,7 @@ class ExpenseRepository {
     await _monthBox.put(newMonth.id, newMonth);
   }
 
-  // Oturumu kapat ve geçmişe kaydet (Kullanıcı "Kaydet" dediğinde)
+  // When user finalizes the session, we update the month details
   Future<void> finalizeSession({
     required String monthId,
     required String finalName,
@@ -44,7 +44,7 @@ class ExpenseRepository {
     }
   }
 
-  // --- HARCAMA İŞLEMLERİ ---
+  // --- EXPENSE OPERATIONS ---
 
   List<Expense> getExpensesForMonth(String monthId) {
     return _expenseBox.values
@@ -60,7 +60,7 @@ class ExpenseRepository {
     await _expenseBox.delete(id);
   }
 
-  // --- HESAPLAMALAR ---
+  // --- CALCULATIONS ---
 
   double getTotalSpent(String monthId) {
     return _expenseBox.values
@@ -75,11 +75,24 @@ class ExpenseRepository {
     return month.limit - totalSpent;
   }
 
-  // --- GEÇMİŞ ---
+  // --- HISTORY ---
 
-  List<Month> getHistory() {
+  List<Month> getArchivedMonths() {
     final history = _monthBox.values.where((m) => m.isDraft == false).toList();
     history.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return history;
+  }
+
+  Future<void> deleteArchivedMonth(String monthId) async {
+    // İlgili ayı sil
+    await _monthBox.delete(monthId);
+
+    // O aya ait tüm harcamaları sil
+    final expensesToDelete = _expenseBox.values
+        .where((expense) => expense.monthId == monthId)
+        .toList();
+    for (var expense in expensesToDelete) {
+      await _expenseBox.delete(expense.id);
+    }
   }
 }
