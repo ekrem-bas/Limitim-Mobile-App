@@ -39,7 +39,7 @@ class ExpenseRepository {
     if (month != null) {
       month.name = finalName;
       month.year = finalYear;
-      month.isDraft = false; // Artık geçmişe gitti
+      month.isDraft = false; // Mark as finalized
       await _monthBox.put(month.id, month);
     }
   }
@@ -84,10 +84,10 @@ class ExpenseRepository {
   }
 
   Future<void> deleteArchivedMonth(String monthId) async {
-    // İlgili ayı sil
+    // Delete the month
     await _monthBox.delete(monthId);
 
-    // O aya ait tüm harcamaları sil
+    // Delete all expenses associated with this month
     final expensesToDelete = _expenseBox.values
         .where((expense) => expense.monthId == monthId)
         .toList();
