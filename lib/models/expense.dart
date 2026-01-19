@@ -8,7 +8,7 @@ class Expense {
   final String id;
 
   @HiveField(1)
-  final String monthId; // Aktif taslağın ID'si
+  final String monthId; 
 
   @HiveField(2)
   final String title;
