@@ -33,18 +33,23 @@ class HistoryDetailPage extends StatelessWidget {
           // LimitView'a verileri gönderiyoruz
           LimitView(limit: month.limit, totalExpense: totalSpent),
           const Divider(height: 1),
-          Expanded(child: _buildReadOnlyExpenseList(expenses)),
+          Expanded(child: _buildReadOnlyExpenseList(context, expenses)),
         ],
       ),
     );
   }
 
-  Widget _buildReadOnlyExpenseList(List<Expense> expenses) {
+  Widget _buildReadOnlyExpenseList(
+    BuildContext context,
+    List<Expense> expenses,
+  ) {
     if (expenses.isEmpty) {
-      return const Center(
+      return Center(
         child: Text(
           "Bu döneme ait harcama kaydı bulunamadı.",
-          style: TextStyle(color: Colors.grey),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+          ),
         ),
       );
     }

@@ -19,13 +19,15 @@ class HistoryPage extends StatelessWidget {
       body: BlocBuilder<HistoryBloc, HistoryState>(
         builder: (context, state) {
           if (state is HistoryLoading) {
-            return const Center(
-              child: CircularProgressIndicator(color: Colors.black),
+            return Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.primary,
+              ),
             );
           }
           if (state is HistoryLoaded) {
             if (state.archivedMonths.isEmpty) {
-              return _buildEmptyHistoryState();
+              return _buildEmptyHistoryState(context);
             }
             return HistoryListView(archivedMonths: state.archivedMonths);
           }
@@ -33,7 +35,7 @@ class HistoryPage extends StatelessWidget {
             return Center(child: Text("Bir hata oluştu: ${state.message}"));
           }
           if (state is HistoryEmpty) {
-            return _buildEmptyHistoryState();
+            return _buildEmptyHistoryState(context);
           }
           return const SizedBox();
         },
@@ -42,12 +44,16 @@ class HistoryPage extends StatelessWidget {
   }
 
   // Geçmiş boş olduğunda görünecek şık tasarım
-  Widget _buildEmptyHistoryState() {
+  Widget _buildEmptyHistoryState(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.history_toggle_off, size: 80, color: Colors.grey[400]),
+          Icon(
+            Icons.history_toggle_off,
+            size: 80,
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+          ),
           const SizedBox(height: 16),
           const Text(
             "Henüz arşivlenmiş bir dönem yok.",

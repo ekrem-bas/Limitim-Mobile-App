@@ -7,6 +7,7 @@ import 'package:limitim/models/expense.dart';
 import 'package:limitim/models/month.dart';
 import 'package:limitim/repository/expense_repository.dart';
 import 'package:limitim/screens/root_page.dart';
+import 'package:limitim/theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,8 +46,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(body: RootPage()),
       debugShowCheckedModeBanner: false,
+      title: 'Limitim',
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
+      home: const RootPage(),
     );
   }
 }

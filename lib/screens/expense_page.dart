@@ -5,6 +5,7 @@ import 'package:limitim/widgets/expense/add_expense_sheet.dart';
 import 'package:limitim/widgets/expense/expense_list_view.dart';
 import 'package:limitim/widgets/expense/save_expenses_sheet.dart';
 import 'package:limitim/widgets/limit_view.dart';
+import 'package:limitim/widgets/set_limit_sheet.dart';
 
 class ExpensePage extends StatelessWidget {
   const ExpensePage({super.key});
@@ -43,7 +44,7 @@ class ExpensePage extends StatelessWidget {
 
           if (state is NoActiveSession) {
             // DURUM 1: Limit belirlenmemişse gösterilecek boş ekran
-            return _buildEmptyState();
+            return _buildEmptyState(context);
           }
 
           if (state is SessionActive) {
@@ -73,7 +74,7 @@ class ExpensePage extends StatelessWidget {
         builder: (context, state) {
           if (state is NoActiveSession) {
             return FloatingActionButton.extended(
-              onPressed: () => _showLimitDialog(context),
+              onPressed: () => _showSetLimit(context),
               label: const Text("Limit Belirle"),
               icon: const Icon(Icons.add),
             );
@@ -89,7 +90,7 @@ class ExpensePage extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -97,7 +98,7 @@ class ExpensePage extends StatelessWidget {
           Icon(
             Icons.account_balance_wallet_outlined,
             size: 80,
-            color: Colors.grey[400],
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
           ),
           const SizedBox(height: 16),
           const Text(
@@ -110,40 +111,15 @@ class ExpensePage extends StatelessWidget {
     );
   }
 
-  void _showLimitDialog(BuildContext context) {
-    final TextEditingController limitController = TextEditingController();
-
-    showDialog(
+  void _showSetLimit(BuildContext context) {
+    showModalBottomSheet(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Limit Belirle"),
-        content: TextField(
-          controller: limitController,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          decoration: const InputDecoration(
-            hintText: "Örn: 5000",
-            suffixText: "₺",
-            border: OutlineInputBorder(),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("İptal"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final limit = double.tryParse(limitController.text);
-              if (limit != null && limit > 0) {
-                // BLoC'a yeni oturum başlatma emrini gönderiyoruz
-                context.read<ActiveSessionBloc>().add(StartNewSession(limit));
-                Navigator.pop(context);
-              }
-            },
-            child: const Text("Başlat"),
-          ),
-        ],
+      isScrollControlled: true, // Klavyenin düzgün çalışması için şart
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
+      builder: (context) => const SetLimitSheet(),
     );
   }
 

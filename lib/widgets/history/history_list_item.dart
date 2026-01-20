@@ -13,7 +13,7 @@ class HistoryListItem extends StatelessWidget {
     return Dismissible(
       key: Key(month.id),
       direction: DismissDirection.endToStart,
-      background: _buildDeleteBackground(),
+      background: _buildDeleteBackground(context),
       onDismissed: (_) {
         context.read<HistoryBloc>().add(DeleteHistoryMonthEvent(month.id));
       },
@@ -21,8 +21,8 @@ class HistoryListItem extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
         elevation: 2,
         child: ListTile(
-          leading: const CircleAvatar(
-            backgroundColor: Colors.blueGrey,
+          leading: CircleAvatar(
+            backgroundColor: Theme.of(context).colorScheme.secondary,
             child: Icon(Icons.calendar_month, color: Colors.white),
           ),
           title: Text(
@@ -44,16 +44,19 @@ class HistoryListItem extends StatelessWidget {
     );
   }
 
-  Widget _buildDeleteBackground() {
+  Widget _buildDeleteBackground(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.red,
+        color: Theme.of(context).colorScheme.error,
         borderRadius: BorderRadius.circular(8),
       ),
       alignment: Alignment.centerRight,
       padding: const EdgeInsets.only(right: 20),
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-      child: const Icon(Icons.delete_sweep, color: Colors.white),
+      child: Icon(
+        Icons.delete_sweep,
+        color: Theme.of(context).colorScheme.onError,
+      ),
     );
   }
 }

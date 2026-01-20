@@ -12,7 +12,7 @@ class ExpenseListView extends StatelessWidget {
       ..sort((a, b) => b.date.compareTo(a.date));
 
     if (sortedExpenses.isEmpty) {
-      return _emptyView();
+      return _emptyView(context);
     }
     return ListView.builder(
       itemCount: sortedExpenses.length,
@@ -25,7 +25,7 @@ class ExpenseListView extends StatelessWidget {
     );
   }
 
-  Center _emptyView() {
+  Center _emptyView(BuildContext context) {
     final String warningMessage =
         "Henüz bir harcama eklemediniz.\nAlttaki + butonuna basarak başlayın.";
     return Center(
@@ -34,12 +34,18 @@ class ExpenseListView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.shopping_bag_outlined, size: 50, color: Colors.grey),
+            Icon(
+              Icons.shopping_bag_outlined,
+              size: 50,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+            ),
             SizedBox(height: 10),
             Text(
               warningMessage,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+              ),
             ),
           ],
         ),

@@ -49,8 +49,10 @@ class _RootPageState extends State<RootPage> {
       child: Scaffold(
         body: IndexedStack(index: _currentIndex, children: pages),
         bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.grey[300],
-          selectedItemColor: Colors.black,
+          backgroundColor:
+              Theme.of(context).navigationBarTheme.backgroundColor ??
+              Theme.of(context).colorScheme.surface,
+          selectedItemColor: Theme.of(context).colorScheme.primary,
           currentIndex: _currentIndex,
           onTap: _onItemTapped,
           items: [

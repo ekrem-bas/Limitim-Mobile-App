@@ -14,7 +14,7 @@ class ExpenseListItem extends StatelessWidget {
     return Dismissible(
       key: Key(expense.id),
       direction: DismissDirection.endToStart,
-      background: _buildDeleteBackground(),
+      background: _buildDeleteBackground(context),
       onDismissed: (direction) {
         // trigger delete event in the bloc
         context.read<ActiveSessionBloc>().add(DeleteExpenseEvent(expense.id));
@@ -33,14 +33,17 @@ class ExpenseListItem extends StatelessWidget {
           ),
           subtitle: Text(
             "${expense.date.day}/${expense.date.month}/${expense.date.year}",
-            style: TextStyle(color: Colors.grey[600], fontSize: 12),
+            style: TextStyle(
+              color: Theme.of(context).textTheme.bodySmall?.color,
+              fontSize: 12,
+            ),
           ),
           trailing: Text(
             "${expense.amount.toStringAsFixed(2)} ₺",
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
-              color: Colors.black,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
         ),
@@ -48,16 +51,19 @@ class ExpenseListItem extends StatelessWidget {
     );
   }
 
-  Widget _buildDeleteBackground() {
+  Widget _buildDeleteBackground(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.red,
+        color: Theme.of(context).colorScheme.error,
         borderRadius: BorderRadius.circular(8),
       ),
       alignment: Alignment.centerRight,
       padding: const EdgeInsets.only(right: 20),
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-      child: const Icon(Icons.delete_sweep, color: Colors.white),
+      child: Icon(
+        Icons.delete_sweep,
+        color: Theme.of(context).colorScheme.onError,
+      ),
     );
   }
 }

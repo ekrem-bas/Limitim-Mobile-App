@@ -79,8 +79,6 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
             height: 55,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -102,7 +100,10 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
               onPressed: () => Navigator.pop(context),
               child: Text(
                 "Vazgeç",
-                style: TextStyle(color: Colors.grey[600], fontSize: 15),
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.bodySmall?.color,
+                  fontSize: 15,
+                ),
               ),
             ),
           ),

@@ -51,8 +51,8 @@ class _SaveExpensesSheetState extends State<SaveExpensesSheet> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -63,10 +63,12 @@ class _SaveExpensesSheetState extends State<SaveExpensesSheet> {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             "Mevcut harcamalarınız geçmişe taşınacak ve yeni bir dönem başlayacaktır.",
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.grey),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+            ),
           ),
           const SizedBox(height: 24),
 
@@ -110,8 +112,6 @@ class _SaveExpensesSheetState extends State<SaveExpensesSheet> {
             height: 50,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -129,7 +129,10 @@ class _SaveExpensesSheetState extends State<SaveExpensesSheet> {
               onPressed: () => Navigator.pop(context),
               child: Text(
                 "Vazgeç",
-                style: TextStyle(color: Colors.grey[600], fontSize: 15),
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.bodySmall?.color,
+                  fontSize: 15,
+                ),
               ),
             ),
           ),

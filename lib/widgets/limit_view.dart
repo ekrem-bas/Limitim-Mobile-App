@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:limitim/theme/app_theme.dart';
 
 class LimitView extends StatelessWidget {
   final double limit;
@@ -23,7 +24,9 @@ class LimitView extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.green[800],
+                    color:
+                        Theme.of(context).extension<AppColors>()?.success ??
+                        Theme.of(context).colorScheme.secondary,
                   ),
                   maxLines: 1,
                 ),
@@ -38,7 +41,9 @@ class LimitView extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.red[800],
+                    color:
+                        Theme.of(context).extension<AppColors>()?.danger ??
+                        Theme.of(context).colorScheme.error,
                   ),
                   maxLines: 1,
                 ),
