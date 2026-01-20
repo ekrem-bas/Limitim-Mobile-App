@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:limitim/bloc/history_bloc/history_bloc.dart';
 import 'package:limitim/models/month.dart';
+import 'package:limitim/widgets/history/history_detail_page.dart';
 
 class HistoryListItem extends StatelessWidget {
   final Month month;
@@ -31,8 +32,12 @@ class HistoryListItem extends StatelessWidget {
           subtitle: Text("Limit: ${month.limit.toStringAsFixed(2)} ₺"),
           trailing: const Icon(Icons.chevron_right),
           onTap: () {
-            // Buraya tıklandığında detay sayfasına gideceğiz
-            // Navigator.push(context, MaterialPageRoute(builder: (_) => MonthDetailScreen(month: month)));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HistoryDetailPage(month: month),
+              ),
+            );
           },
         ),
       ),

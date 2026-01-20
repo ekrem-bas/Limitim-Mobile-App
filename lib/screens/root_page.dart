@@ -26,7 +26,7 @@ class _RootPageState extends State<RootPage> {
     if (index == 1) {
       final historyState = context.read<HistoryBloc>().state;
       // Sadece başlangıç durumunda veya hata almışsa veriyi çek
-      if (historyState is HistoryInitial || historyState is HistoryError) {
+      if (historyState is HistoryLoading || historyState is HistoryError) {
         context.read<HistoryBloc>().add(LoadHistoryEvent());
       }
     }

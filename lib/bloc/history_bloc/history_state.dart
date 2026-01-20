@@ -7,7 +7,7 @@ abstract class HistoryState extends Equatable {
   List<Object> get props => [];
 }
 
-final class HistoryInitial extends HistoryState {}
+final class HistoryLoading extends HistoryState {}
 
 final class HistoryEmpty extends HistoryState {}
 

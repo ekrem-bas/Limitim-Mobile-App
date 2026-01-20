@@ -11,7 +11,7 @@ part 'history_state.dart';
 class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
   final ExpenseRepository repository;
 
-  HistoryBloc({required this.repository}) : super(HistoryInitial()) {
+  HistoryBloc({required this.repository}) : super(HistoryLoading()) {
     on<LoadHistoryEvent>(_onLoadHistory);
     on<DeleteHistoryMonthEvent>(_onDeleteHistoryMonth);
   }
@@ -20,7 +20,7 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     LoadHistoryEvent event,
     Emitter<HistoryState> emit,
   ) async {
-    emit(HistoryInitial());
+    emit(HistoryLoading());
 
     try {
       // get archived months from repository

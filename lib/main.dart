@@ -7,7 +7,6 @@ import 'package:limitim/models/expense.dart';
 import 'package:limitim/models/month.dart';
 import 'package:limitim/repository/expense_repository.dart';
 import 'package:limitim/screens/root_page.dart';
-import 'package:limitim/widgets/limit_view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

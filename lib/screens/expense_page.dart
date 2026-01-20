@@ -13,7 +13,11 @@ class ExpensePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Harcamalarım'),
+        title: const Text(
+          'Harcamalarım',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: false,
         actions: [
           BlocBuilder<ActiveSessionBloc, ActiveSessionState>(
             builder: (context, state) {
