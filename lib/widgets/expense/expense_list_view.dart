@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:limitim/models/expense.dart';
-import 'package:limitim/widgets/expense_list_item.dart';
+import 'package:limitim/widgets/expense/expense_list_item.dart';
 
 class ExpenseListView extends StatelessWidget {
   final List<Expense> expenses;
