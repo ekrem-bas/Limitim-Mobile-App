@@ -1,4 +1,4 @@
-package com.example.limitim
+package com.ekrembas.limitim
 
 import io.flutter.embedding.android.FlutterActivity
 

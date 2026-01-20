@@ -70,6 +70,5 @@ class ExpenseListItem extends StatelessWidget {
 
 String capitalize(String text) {
   if (text.isEmpty) return text;
-  // toBeginningOfSentenceCase hem ilk harfi büyütür hem de Türkçe karakter desteği sunar.
   return toBeginningOfSentenceCase(text.toLowerCase()) ?? text;
 }

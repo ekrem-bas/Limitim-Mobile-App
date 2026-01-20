@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:limitim/bloc/session_bloc/active_session_bloc.dart';
 
 class AddExpenseSheet extends StatefulWidget {
@@ -16,7 +17,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   String? _amountError;
 
   void _submit() {
-    final title = _titleController.text.trim();
+    final title = capitalize(_titleController.text.trim());
     final amountText = _amountController.text.replaceAll(',', '.');
     final amount = double.tryParse(amountText);
 
@@ -111,4 +112,9 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       ),
     );
   }
+}
+
+String capitalize(String text) {
+  if (text.isEmpty) return text;
+  return toBeginningOfSentenceCase(text.toLowerCase()) ?? text;
 }
