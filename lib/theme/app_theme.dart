@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AppTheme {
   // Ortak köşe kavisi
@@ -17,6 +18,10 @@ class AppTheme {
       error: Colors.red[700]!,
     ),
     appBarTheme: const AppBarTheme(
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark, // Android
+        statusBarBrightness: Brightness.light, // iOS
+      ),
       backgroundColor: Colors.transparent,
       foregroundColor: Colors.black,
       elevation: 0,

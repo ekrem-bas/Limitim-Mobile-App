@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:limitim/bloc/history_bloc/history_bloc.dart';
 import 'package:limitim/widgets/history/history_list_view.dart';
@@ -52,7 +53,9 @@ class HistoryPage extends StatelessWidget {
           Icon(
             Icons.history_toggle_off,
             size: 80,
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.6),
           ),
           const SizedBox(height: 16),
           const Text(

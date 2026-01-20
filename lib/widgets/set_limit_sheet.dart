@@ -50,7 +50,9 @@ class _SetLimitSheetState extends State<SetLimitSheet> {
             "Bu ay için harcayabileceğiniz toplam miktarı giriniz.",
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
           const SizedBox(height: 24),

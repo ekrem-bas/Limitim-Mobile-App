@@ -67,7 +67,7 @@ class _SaveExpensesSheetState extends State<SaveExpensesSheet> {
             "Mevcut harcamalarınız geçmişe taşınacak ve yeni bir dönem başlayacaktır.",
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
           const SizedBox(height: 24),

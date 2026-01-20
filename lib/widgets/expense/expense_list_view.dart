@@ -37,14 +37,14 @@ class ExpenseListView extends StatelessWidget {
             Icon(
               Icons.shopping_bag_outlined,
               size: 50,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
             SizedBox(height: 10),
             Text(
               warningMessage,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
           ],

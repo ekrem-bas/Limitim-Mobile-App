@@ -48,7 +48,7 @@ class HistoryDetailPage extends StatelessWidget {
         child: Text(
           "Bu döneme ait harcama kaydı bulunamadı.",
           style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ),
       );
