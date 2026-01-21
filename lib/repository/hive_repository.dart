@@ -45,6 +45,15 @@ class HiveRepository {
     }
   }
 
+  // update active session limit
+  Future<void> updateActiveSessionLimit(double newLimit) async {
+    final activeSession = getActiveSession();
+    if (activeSession != null) {
+      final updatedMonth = activeSession.copyWith(limit: newLimit);
+      await _monthBox.put(updatedMonth.id, updatedMonth);
+    }
+  }
+
   // When user finalizes the session, we update the month details
   Future<void> finalizeSession({
     required String monthId,

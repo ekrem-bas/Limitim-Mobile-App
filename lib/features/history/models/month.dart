@@ -34,6 +34,24 @@ class Month {
     required this.createdAt,
     this.customName,
   });
+
+  Month copyWith({
+    double? limit,
+    String? customName,
+    String? name,
+    bool? isDraft,
+    int? year,
+  }) {
+    return Month(
+      id: id, // Mevcut ID'yi koru
+      name: name ?? this.name,
+      limit: limit ?? this.limit,
+      isDraft: isDraft ?? this.isDraft,
+      year: year ?? this.year,
+      createdAt: createdAt,
+      customName: customName ?? this.customName,
+    );
+  }
 }
 
 extension MonthFormatting on Month {

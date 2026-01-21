@@ -149,5 +149,17 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
   FutureOr<void> _onUpdateSessionLimit(
     UpdateSessionLimit event,
     Emitter<SessionState> emit,
-  ) {}
+  ) async {
+    if (state is SessionActive) {
+      try {
+        // update session limit via repository
+        await repository.updateActiveSessionLimit(event.newLimit);
+
+        // call check active session to refresh state
+        add(CheckActiveSession());
+      } catch (e) {
+        emit(SessionError('Failed to update session limit: $e'));
+      }
+    }
+  }
 }
