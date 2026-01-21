@@ -146,8 +146,7 @@ class ExpenseScreen extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors
-          .transparent, // Arka planı transparan yapıp Container'da şekil veriyoruz
+      backgroundColor: Colors.transparent,
       builder: (context) => const SaveExpensesSheet(),
     );
   }

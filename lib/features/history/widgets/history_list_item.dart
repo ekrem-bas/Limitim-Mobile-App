@@ -22,9 +22,14 @@ class HistoryListItem extends StatelessWidget {
           backgroundColor: Theme.of(context).colorScheme.secondary,
           child: Icon(Icons.calendar_month, color: Colors.white),
         ),
-        title: Text(
-          "${month.name} ${month.year}",
-          style: const TextStyle(fontWeight: FontWeight.bold),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              month.displayTitle,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
         subtitle: Text("$_limitTextPrefix${month.limit.toStringAsFixed(2)} ₺"),
         trailing: const Icon(Icons.chevron_right),

@@ -117,6 +117,7 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
         monthId: activeSession.id,
         finalName: event.monthName,
         finalYear: event.year,
+        customName: event.customName,
       );
 
       // emit no active session state

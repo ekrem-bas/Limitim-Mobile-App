@@ -34,12 +34,14 @@ class HiveRepository {
     required String monthId,
     required String finalName,
     required int finalYear,
+    required String? customName,
   }) async {
     final month = _monthBox.get(monthId);
     if (month != null) {
       month.name = finalName;
       month.year = finalYear;
       month.isDraft = false; // Mark as finalized
+      month.customName = customName;
       await _monthBox.put(month.id, month);
     }
   }

@@ -27,7 +27,29 @@ class HistoryDetailPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("${month.name} ${month.year}"),
+        title: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              month.hasCustomName
+                  ? month.customName!
+                  : "${month.name} ${month.year}",
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+
+            if (month.hasCustomName)
+              Text(
+                "${month.name} ${month.year}",
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.6),
+                ),
+              ),
+          ],
+        ),
         centerTitle: true,
       ),
       body: Column(

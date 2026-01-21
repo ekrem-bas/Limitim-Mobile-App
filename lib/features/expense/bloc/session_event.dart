@@ -38,8 +38,13 @@ final class DeleteExpenseEvent extends SessionEvent {
 final class FinalizeSessionEvent extends SessionEvent {
   final String monthName;
   final int year;
+  final String? customName;
 
-  const FinalizeSessionEvent({required this.monthName, required this.year});
+  const FinalizeSessionEvent({
+    required this.monthName,
+    required this.year,
+    this.customName,
+  });
 
   @override
   List<Object> get props => [monthName, year];

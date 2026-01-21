@@ -8,19 +8,22 @@ class Month {
   final String id;
 
   @HiveField(1)
-  String name; 
+  String name;
 
   @HiveField(2)
   final double limit;
 
   @HiveField(3)
-  bool isDraft; 
+  bool isDraft;
 
   @HiveField(4)
   int? year;
 
   @HiveField(5)
   final DateTime createdAt;
+
+  @HiveField(6)
+  String? customName;
 
   Month({
     required this.id,
@@ -29,5 +32,12 @@ class Month {
     this.isDraft = true,
     this.year,
     required this.createdAt,
+    this.customName,
   });
+}
+
+extension MonthFormatting on Month {
+  bool get hasCustomName => customName != null && customName!.trim().isNotEmpty;
+
+  String get displayTitle => hasCustomName ? customName! : "$name $year";
 }
