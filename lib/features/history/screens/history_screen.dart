@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:limitim/bloc/history_bloc/history_bloc.dart';
-import 'package:limitim/widgets/history/history_list_view.dart';
+import 'package:limitim/features/history/bloc/history_bloc.dart';
+import 'package:limitim/features/history/widgets/history_list_view.dart';
 
-class HistoryPage extends StatelessWidget {
-  const HistoryPage({super.key});
+class HistoryScreen extends StatelessWidget {
+  const HistoryScreen({super.key});
 
+  final String _appBarTitleText = "Geçmiş Bütçeler";
+  final String _errorTextPrefix = "Bir hata oluştu: ";
+  final String _emptyHistoryText = "Henüz arşivlenmiş bir dönem yok.";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Geçmiş Bütçeler',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          _appBarTitleText,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: false,
       ),
       body: BlocBuilder<HistoryBloc, HistoryState>(
         builder: (context, state) {
+          // state 1: loading histories
           if (state is HistoryLoading) {
             return Center(
               child: CircularProgressIndicator(
@@ -26,15 +29,21 @@ class HistoryPage extends StatelessWidget {
               ),
             );
           }
+
+          // state 2: loaded histories
+          // show list of histories
           if (state is HistoryLoaded) {
-            if (state.archivedMonths.isEmpty) {
-              return _buildEmptyHistoryState(context);
-            }
             return HistoryListView(archivedMonths: state.archivedMonths);
           }
+
+          // state 3: error occurred
+          // show error message
           if (state is HistoryError) {
-            return Center(child: Text("Bir hata oluştu: ${state.message}"));
+            return Center(child: Text("$_errorTextPrefix${state.message}"));
           }
+
+          // state 4: empty history
+          // show empty state message
           if (state is HistoryEmpty) {
             return _buildEmptyHistoryState(context);
           }
@@ -44,7 +53,7 @@ class HistoryPage extends StatelessWidget {
     );
   }
 
-  // Geçmiş boş olduğunda görünecek şık tasarım
+  // empty history state widget
   Widget _buildEmptyHistoryState(BuildContext context) {
     return Center(
       child: Column(
@@ -58,9 +67,9 @@ class HistoryPage extends StatelessWidget {
             ).colorScheme.onSurface.withValues(alpha: 0.6),
           ),
           const SizedBox(height: 16),
-          const Text(
-            "Henüz arşivlenmiş bir dönem yok.",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+          Text(
+            _emptyHistoryText,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           ),
         ],
       ),

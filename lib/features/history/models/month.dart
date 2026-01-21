@@ -8,13 +8,13 @@ class Month {
   final String id;
 
   @HiveField(1)
-  String name; // Başta "Aktif" olabilir, kaydedince kullanıcı seçer
+  String name; 
 
   @HiveField(2)
   final double limit;
 
   @HiveField(3)
-  bool isDraft; // true: Ana ekranda aktif, false: Geçmişe kaydedilmiş
+  bool isDraft; 
 
   @HiveField(4)
   int? year;

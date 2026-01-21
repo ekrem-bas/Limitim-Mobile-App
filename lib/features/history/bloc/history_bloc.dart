@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:limitim/models/month.dart';
-import 'package:limitim/repository/expense_repository.dart';
+import 'package:limitim/features/history/models/month.dart';
+import 'package:limitim/repository/hive_repository.dart';
 
 part 'history_event.dart';
 part 'history_state.dart';
 
 class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
-  final ExpenseRepository repository;
+  final HiveRepository repository;
 
   HistoryBloc({required this.repository}) : super(HistoryLoading()) {
     on<LoadHistoryEvent>(_onLoadHistory);

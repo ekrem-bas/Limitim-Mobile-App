@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:limitim/bloc/history_bloc/history_bloc.dart';
-import 'package:limitim/bloc/session_bloc/active_session_bloc.dart';
-import 'package:limitim/screens/history_page.dart';
-import 'package:limitim/screens/expense_page.dart';
+import 'package:limitim/features/history/bloc/history_bloc.dart';
+import 'package:limitim/features/expense/bloc/session_bloc.dart';
+import 'package:limitim/features/history/screens/history_screen.dart';
+import 'package:limitim/features/expense/screens/expense_screen.dart';
 
 class RootPage extends StatefulWidget {
   const RootPage({super.key});
@@ -16,27 +16,30 @@ class _RootPageState extends State<RootPage> {
   int _currentIndex = 0;
 
   // list of pages
-  final List<Widget> pages = [const ExpensePage(), const HistoryPage()];
+  final List<Widget> pages = [const ExpenseScreen(), const HistoryScreen()];
 
   void _onItemTapped(int index) {
-    if (_currentIndex == index) return; // Zaten o sekmedeyse hiçbir şey yapma
+    if (_currentIndex == index) return; // prevent reloading the same page
 
     setState(() => _currentIndex = index);
 
     if (index == 1) {
       final historyState = context.read<HistoryBloc>().state;
-      // Sadece başlangıç durumunda veya hata almışsa veriyi çek
+      // Only fetch data if in initial state or error state
       if (historyState is HistoryLoading || historyState is HistoryError) {
         context.read<HistoryBloc>().add(LoadHistoryEvent());
       }
     }
   }
 
+  final String _titleExpense = "Harcamalar";
+  final String _titleHistory = "Geçmiş";
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<ActiveSessionBloc, ActiveSessionState>(
+        BlocListener<SessionBloc, SessionState>(
           listener: (context, state) {
             // if there is no active session (user has ended the month)
             if (state is NoActiveSession) {
@@ -59,12 +62,12 @@ class _RootPageState extends State<RootPage> {
             _navBarItem(
               icon: const Icon(Icons.home_outlined),
               activeIcon: const Icon(Icons.home),
-              label: 'Harcamalar',
+              label: _titleExpense,
             ),
             _navBarItem(
               icon: const Icon(Icons.history_outlined),
               activeIcon: const Icon(Icons.history),
-              label: 'Geçmiş',
+              label: _titleHistory,
             ),
           ],
         ),

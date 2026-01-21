@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:limitim/models/expense.dart';
-import 'package:limitim/models/month.dart';
-import 'package:limitim/repository/expense_repository.dart';
-import 'package:limitim/widgets/limit_view.dart';
+import 'package:limitim/features/expense/models/expense.dart';
+import 'package:limitim/features/history/models/month.dart';
+import 'package:limitim/core/widgets/limit_view.dart';
+import 'package:limitim/repository/hive_repository.dart';
 
 class HistoryDetailPage extends StatelessWidget {
   final Month month;
 
   const HistoryDetailPage({super.key, required this.month});
 
+  final String _emptyExpenseMessage = "Bu döneme ait harcama kaydı bulunamadı.";
+
   @override
   Widget build(BuildContext context) {
-    // 1. Repository üzerinden bu aya ait harcamaları çekiyoruz
+    // 1. Fetch expenses for the given month
     final List<Expense> expenses = context
-        .read<ExpenseRepository>()
+        .read<HiveRepository>()
         .getExpensesForMonth(month.id);
 
-    // 2. Toplam harcamayı hesaplıyoruz
+    // 2. Calculate total spent in the month
     final double totalSpent = expenses.fold(
       0,
       (sum, item) => sum + item.amount,
@@ -30,7 +32,7 @@ class HistoryDetailPage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // LimitView'a verileri gönderiyoruz
+          // 3. Display limit view
           LimitView(limit: month.limit, totalExpense: totalSpent),
           const Divider(height: 1),
           Expanded(child: _buildReadOnlyExpenseList(context, expenses)),
@@ -46,15 +48,17 @@ class HistoryDetailPage extends StatelessWidget {
     if (expenses.isEmpty) {
       return Center(
         child: Text(
-          "Bu döneme ait harcama kaydı bulunamadı.",
+          _emptyExpenseMessage,
           style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ),
       );
     }
 
-    // Harcamaları tarihe göre sıralayalım
+    // Sort expenses by date (newest first)
     expenses.sort((a, b) => b.date.compareTo(a.date));
 
     return ListView.builder(

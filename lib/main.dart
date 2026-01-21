@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:limitim/bloc/history_bloc/history_bloc.dart';
-import 'package:limitim/bloc/session_bloc/active_session_bloc.dart';
-import 'package:limitim/models/expense.dart';
-import 'package:limitim/models/month.dart';
-import 'package:limitim/repository/expense_repository.dart';
-import 'package:limitim/screens/root_page.dart';
-import 'package:limitim/theme/app_theme.dart';
+import 'package:limitim/features/expense/models/expense.dart';
+import 'package:limitim/features/history/bloc/history_bloc.dart';
+import 'package:limitim/features/expense/bloc/session_bloc.dart';
+import 'package:limitim/features/history/models/month.dart';
+import 'package:limitim/core/root_page.dart';
+import 'package:limitim/core/theme/app_theme.dart';
+import 'package:limitim/repository/hive_repository.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,17 +21,16 @@ Future<void> main() async {
 
   runApp(
     RepositoryProvider(
-      create: (context) => ExpenseRepository(),
+      create: (context) => HiveRepository(),
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) => ActiveSessionBloc(
-              repository: context.read<ExpenseRepository>(),
-            ),
+            create: (context) =>
+                SessionBloc(repository: context.read<HiveRepository>()),
           ),
           BlocProvider(
             create: (context) =>
-                HistoryBloc(repository: context.read<ExpenseRepository>()),
+                HistoryBloc(repository: context.read<HiveRepository>()),
           ),
         ],
         child: const MyApp(),

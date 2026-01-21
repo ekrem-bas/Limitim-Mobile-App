@@ -1,8 +1,8 @@
 import 'package:hive/hive.dart';
-import '../models/month.dart';
-import '../models/expense.dart';
+import 'package:limitim/features/expense/models/expense.dart';
+import 'package:limitim/features/history/models/month.dart';
 
-class ExpenseRepository {
+class HiveRepository {
   Box<Month> get _monthBox => Hive.box<Month>('months');
   Box<Expense> get _expenseBox => Hive.box<Expense>('expenses');
 
@@ -75,7 +75,7 @@ class ExpenseRepository {
     return month.limit - totalSpent;
   }
 
-  // --- HISTORY ---
+  // --- HISTORY OPERATIONS ---
 
   List<Month> getArchivedMonths() {
     final history = _monthBox.values.where((m) => m.isDraft == false).toList();

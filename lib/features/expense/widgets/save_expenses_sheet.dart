@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:limitim/bloc/session_bloc/active_session_bloc.dart';
+import 'package:limitim/features/expense/bloc/session_bloc.dart';
 
 class SaveExpensesSheet extends StatefulWidget {
   const SaveExpensesSheet({super.key});
@@ -36,17 +36,24 @@ class _SaveExpensesSheetState extends State<SaveExpensesSheet> {
     _selectedMonth = _months[now.month - 1];
     _selectedYear = now.year;
 
-    // Mevcut yıldan 2 yıl öncesi ve 2 yıl sonrasını içeren bir liste
+    // generate a list of years from current year -2 to current year +2
     _years = List.generate(5, (index) => (now.year - 2) + index);
   }
 
   void _onConfirm() {
-    context.read<ActiveSessionBloc>().add(
+    context.read<SessionBloc>().add(
       FinalizeSessionEvent(monthName: _selectedMonth, year: _selectedYear),
     );
     Navigator.pop(context);
   }
 
+  final String _finalizeSessionText = "Dönemi Arşivle";
+  final String _finalizeSessionHintText =
+      "Mevcut harcamalarınız geçmişe taşınacak ve yeni bir dönem başlayacaktır.";
+  final String _selectMonthText = "Ay Seçin";
+  final String _selectYearText = "Yıl Seçin";
+  final String _confirmButtonText = "Arşivlemeyi Tamamla";
+  final String _cancelButtonText = "Vazgeç";
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -58,27 +65,29 @@ class _SaveExpensesSheetState extends State<SaveExpensesSheet> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            "Dönemi Arşivle",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          Text(
+            _finalizeSessionText,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
-            "Mevcut harcamalarınız geçmişe taşınacak ve yeni bir dönem başlayacaktır.",
+            _finalizeSessionHintText,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
           const SizedBox(height: 24),
 
-          // Ay Seçimi
+          // month selection
           DropdownButtonFormField<String>(
             initialValue: _selectedMonth,
-            decoration: const InputDecoration(
-              labelText: "Ay Seçin",
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.calendar_month),
+            decoration: InputDecoration(
+              labelText: _selectMonthText,
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.calendar_month),
             ),
             items: _months
                 .map((m) => DropdownMenuItem(value: m, child: Text(m)))
@@ -88,13 +97,13 @@ class _SaveExpensesSheetState extends State<SaveExpensesSheet> {
 
           const SizedBox(height: 16),
 
-          // Yıl Seçimi
+          // year selection
           DropdownButtonFormField<int>(
             initialValue: _selectedYear,
-            decoration: const InputDecoration(
-              labelText: "Yıl Seçin",
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.event),
+            decoration: InputDecoration(
+              labelText: _selectYearText,
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.event),
             ),
             items: _years
                 .map(
@@ -106,7 +115,7 @@ class _SaveExpensesSheetState extends State<SaveExpensesSheet> {
 
           const SizedBox(height: 32),
 
-          // Onay Butonu
+          // confirm button
           SizedBox(
             width: double.infinity,
             height: 50,
@@ -117,18 +126,18 @@ class _SaveExpensesSheetState extends State<SaveExpensesSheet> {
                 ),
               ),
               onPressed: _onConfirm,
-              child: const Text("Arşivlemeyi Tamamla"),
+              child: Text(_confirmButtonText),
             ),
           ),
           const SizedBox(height: 8),
 
-          // VAZGEÇ BUTONU
+          // cancel button
           SizedBox(
             width: double.infinity,
             child: TextButton(
               onPressed: () => Navigator.pop(context),
               child: Text(
-                "Vazgeç",
+                _cancelButtonText,
                 style: TextStyle(
                   color: Theme.of(context).textTheme.bodySmall?.color,
                   fontSize: 15,

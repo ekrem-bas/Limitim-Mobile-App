@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:limitim/models/month.dart';
-import 'package:limitim/widgets/history/history_list_item.dart';
+import 'package:limitim/features/history/models/month.dart';
+import 'package:limitim/features/history/widgets/history_list_item.dart';
 
 class HistoryListView extends StatelessWidget {
   final List<Month> archivedMonths;
@@ -8,13 +8,11 @@ class HistoryListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Ayları yıla ve aya göre tersten sıralayalım (en yeni en üstte)
+    // sort months by year and month in descending order
     final sortedMonths = List<Month>.from(archivedMonths)
       ..sort((a, b) {
-        // Önce yıla, sonra ay ismine/ID'sine göre sıralama mantığı kurulabilir
-        return b.id.compareTo(
-          a.id,
-        ); // ID genellikle timestamp olduğu için pratik bir çözüm
+        // firts sort by year, then by month name/ID
+        return b.id.compareTo(a.id);
       });
 
     return ListView.builder(

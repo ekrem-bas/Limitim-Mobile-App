@@ -1,17 +1,16 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:limitim/models/expense.dart';
-import 'package:limitim/models/month.dart';
-import 'package:limitim/repository/expense_repository.dart';
+import 'package:limitim/features/expense/models/expense.dart';
+import 'package:limitim/features/history/models/month.dart';
+import 'package:limitim/repository/hive_repository.dart';
 
-part 'active_session_event.dart';
-part 'active_session_state.dart';
+part 'session_event.dart';
+part 'session_state.dart';
 
-class ActiveSessionBloc extends Bloc<ActiveSessionEvent, ActiveSessionState> {
-  final ExpenseRepository repository;
-  ActiveSessionBloc({required this.repository}) : super(SessionLoading()) {
+class SessionBloc extends Bloc<SessionEvent, SessionState> {
+  final HiveRepository repository;
+  SessionBloc({required this.repository}) : super(SessionLoading()) {
     // event handlers
     on<CheckActiveSession>(_onCheckActiveSession);
     on<StartNewSession>(_onStartNewSession);
@@ -25,7 +24,7 @@ class ActiveSessionBloc extends Bloc<ActiveSessionEvent, ActiveSessionState> {
 
   FutureOr<void> _onCheckActiveSession(
     CheckActiveSession event,
-    Emitter<ActiveSessionState> emit,
+    Emitter<SessionState> emit,
   ) {
     // check if the session is active
     try {
@@ -56,7 +55,7 @@ class ActiveSessionBloc extends Bloc<ActiveSessionEvent, ActiveSessionState> {
 
   FutureOr<void> _onStartNewSession(
     StartNewSession event,
-    Emitter<ActiveSessionState> emit,
+    Emitter<SessionState> emit,
   ) async {
     // start a new session
     try {
@@ -71,7 +70,7 @@ class ActiveSessionBloc extends Bloc<ActiveSessionEvent, ActiveSessionState> {
 
   FutureOr<void> _onAddExpenseEvent(
     AddExpenseEvent event,
-    Emitter<ActiveSessionState> emit,
+    Emitter<SessionState> emit,
   ) async {
     // add expense via repository
     try {
@@ -94,7 +93,7 @@ class ActiveSessionBloc extends Bloc<ActiveSessionEvent, ActiveSessionState> {
 
   FutureOr<void> _onDeleteExpenseEvent(
     DeleteExpenseEvent event,
-    Emitter<ActiveSessionState> emit,
+    Emitter<SessionState> emit,
   ) async {
     try {
       // delete expense via repository
@@ -109,7 +108,7 @@ class ActiveSessionBloc extends Bloc<ActiveSessionEvent, ActiveSessionState> {
 
   FutureOr<void> _onFinalizeSession(
     FinalizeSessionEvent event,
-    Emitter<ActiveSessionState> emit,
+    Emitter<SessionState> emit,
   ) async {
     try {
       // finalize session via repository

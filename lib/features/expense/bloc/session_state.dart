@@ -1,17 +1,17 @@
-part of 'active_session_bloc.dart';
+part of 'session_bloc.dart';
 
-abstract class ActiveSessionState extends Equatable {
-  const ActiveSessionState();
+abstract class SessionState extends Equatable {
+  const SessionState();
 
   @override
   List<Object> get props => [];
 }
 
-final class SessionLoading extends ActiveSessionState {}
+final class SessionLoading extends SessionState {}
 
-final class NoActiveSession extends ActiveSessionState {}
+final class NoActiveSession extends SessionState {}
 
-final class SessionActive extends ActiveSessionState {
+final class SessionActive extends SessionState {
   final Month activeMonth;
   final List<Expense> expenses;
   final double totalSpent;
@@ -28,7 +28,7 @@ final class SessionActive extends ActiveSessionState {
   List<Object> get props => [activeMonth, expenses, totalSpent, remainingLimit];
 }
 
-final class SessionError extends ActiveSessionState {
+final class SessionError extends SessionState {
   final String message;
   const SessionError(this.message);
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AppTheme {
-  // Ortak köşe kavisi
   static const double _borderRadius = 12.0;
 
   // --- LIGHT MODE ---
@@ -13,14 +12,14 @@ class AppTheme {
       primary: Colors.black,
       onPrimary: Colors.white,
       secondary: Colors.grey[600]!,
-      surface: Colors.grey[50]!, // 'background' yerine 'surface'
-      onSurface: Colors.black, // 'onBackground' yerine 'onSurface'
+      surface: Colors.grey[50]!,
+      onSurface: Colors.black,
       error: Colors.red[700]!,
     ),
     appBarTheme: const AppBarTheme(
       systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.dark, // Android
-        statusBarBrightness: Brightness.light, // iOS
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
       ),
       backgroundColor: Colors.transparent,
       foregroundColor: Colors.black,
@@ -36,7 +35,7 @@ class AppTheme {
       elevation: 0.5,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(_borderRadius),
-        side: BorderSide(color: Colors.grey[200]!, width: 1), // Hafif çerçeve
+        side: BorderSide(color: Colors.grey[200]!, width: 1),
       ),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
@@ -74,10 +73,7 @@ class AppTheme {
       }),
     ),
     extensions: <ThemeExtension<dynamic>>[
-      const AppColors(
-        success: Color(0xFF2E7D32), // green[800]
-        danger: Color(0xFFC62828), // red[800]
-      ),
+      const AppColors(primary: Color(0xFF2E7D32), secondary: Color(0xFFC62828)),
     ],
   );
 
@@ -89,7 +85,7 @@ class AppTheme {
       primary: Colors.white,
       onPrimary: Colors.black,
       secondary: Colors.grey[400]!,
-      surface: const Color(0xFF121212), // Koyu arka plan
+      surface: const Color(0xFF121212),
       onSurface: Colors.white,
       error: Colors.red[400]!,
     ),
@@ -145,27 +141,23 @@ class AppTheme {
       }),
     ),
     extensions: <ThemeExtension<dynamic>>[
-      const AppColors(
-        success: Color(0xFF66BB6A), // lighter green for dark
-        danger: Color(0xFFEF5350), // lighter red for dark
-      ),
+      const AppColors(primary: Color(0xFF66BB6A), secondary: Color(0xFFEF5350)),
     ],
   );
 }
 
-// Custom semantic colors used by the app (success/danger etc.)
 @immutable
 class AppColors extends ThemeExtension<AppColors> {
-  final Color? success;
-  final Color? danger;
+  final Color? primary;
+  final Color? secondary;
 
-  const AppColors({this.success, this.danger});
+  const AppColors({this.primary, this.secondary});
 
   @override
-  AppColors copyWith({Color? success, Color? danger}) {
+  AppColors copyWith({Color? primary, Color? secondary}) {
     return AppColors(
-      success: success ?? this.success,
-      danger: danger ?? this.danger,
+      primary: primary ?? this.primary,
+      secondary: secondary ?? this.secondary,
     );
   }
 
@@ -173,8 +165,8 @@ class AppColors extends ThemeExtension<AppColors> {
   AppColors lerp(ThemeExtension<AppColors>? other, double t) {
     if (other is! AppColors) return this;
     return AppColors(
-      success: Color.lerp(success, other.success, t),
-      danger: Color.lerp(danger, other.danger, t),
+      primary: Color.lerp(primary, other.primary, t),
+      secondary: Color.lerp(secondary, other.secondary, t),
     );
   }
 }

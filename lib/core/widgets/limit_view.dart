@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:limitim/theme/app_theme.dart';
+import 'package:limitim/core/theme/app_theme.dart';
 
 class LimitView extends StatelessWidget {
+  // limit - totalExpense
   final double limit;
   final double totalExpense;
+  final String limitText = "Limit: ";
+  final String expenseText = "Harcama: ";
   const LimitView({super.key, required this.limit, required this.totalExpense});
 
   @override
@@ -20,12 +23,12 @@ class LimitView extends StatelessWidget {
                 fit: BoxFit.scaleDown,
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Limit: ${(limit - totalExpense).toStringAsFixed(2)} ₺',
+                  '$limitText ${(limit - totalExpense).toStringAsFixed(2)} ₺',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color:
-                        Theme.of(context).extension<AppColors>()?.success ??
+                        Theme.of(context).extension<AppColors>()?.primary ??
                         Theme.of(context).colorScheme.secondary,
                   ),
                   maxLines: 1,
@@ -37,12 +40,12 @@ class LimitView extends StatelessWidget {
                 fit: BoxFit.scaleDown,
                 alignment: Alignment.centerRight,
                 child: Text(
-                  'Harcama: ${totalExpense.toStringAsFixed(2)} ₺',
+                  '$expenseText ${totalExpense.toStringAsFixed(2)} ₺',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color:
-                        Theme.of(context).extension<AppColors>()?.danger ??
+                        Theme.of(context).extension<AppColors>()?.secondary ??
                         Theme.of(context).colorScheme.error,
                   ),
                   maxLines: 1,

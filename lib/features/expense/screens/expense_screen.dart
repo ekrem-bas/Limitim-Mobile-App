@@ -1,33 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:limitim/bloc/session_bloc/active_session_bloc.dart';
-import 'package:limitim/widgets/expense/add_expense_sheet.dart';
-import 'package:limitim/widgets/expense/expense_list_view.dart';
-import 'package:limitim/widgets/expense/save_expenses_sheet.dart';
-import 'package:limitim/widgets/limit_view.dart';
-import 'package:limitim/widgets/set_limit_sheet.dart';
+import 'package:limitim/features/expense/bloc/session_bloc.dart';
+import 'package:limitim/features/expense/widgets/add_expense_sheet.dart';
+import 'package:limitim/features/expense/widgets/expense_list_view.dart';
+import 'package:limitim/core/widgets/limit_view.dart';
+import 'package:limitim/core/widgets/set_limit_sheet.dart';
+import 'package:limitim/features/expense/widgets/save_expenses_sheet.dart';
 
-class ExpensePage extends StatelessWidget {
-  const ExpensePage({super.key});
+class ExpenseScreen extends StatelessWidget {
+  final String _titleExpense = "Harcamalar";
+  final String _endSessionTooltip = "Dönemi Bitir ve Kaydet";
+  final String _startSessionTooltip = "Limit Belirle";
+  final String _emptyStateText = "Aktif bir bütçe dönemi yok.";
+  final String _emptyStateHintText = "Başlamak için alttaki butona tıklayın.";
+
+  const ExpenseScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Harcamalarım',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          _titleExpense,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: false,
         actions: [
-          BlocBuilder<ActiveSessionBloc, ActiveSessionState>(
+          BlocBuilder<SessionBloc, SessionState>(
             builder: (context, state) {
               if (state is SessionActive) {
                 return IconButton(
                   iconSize: 32,
                   onPressed: () => _showFinalizeSheet(context),
                   icon: Icon(Icons.save),
-                  tooltip: "Dönemi Bitir ve Kaydet",
+                  tooltip: _endSessionTooltip,
                 );
               }
 
@@ -36,7 +42,7 @@ class ExpensePage extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocBuilder<ActiveSessionBloc, ActiveSessionState>(
+      body: BlocBuilder<SessionBloc, SessionState>(
         builder: (context, state) {
           if (state is SessionLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -70,12 +76,12 @@ class ExpensePage extends StatelessWidget {
         },
       ),
 
-      floatingActionButton: BlocBuilder<ActiveSessionBloc, ActiveSessionState>(
+      floatingActionButton: BlocBuilder<SessionBloc, SessionState>(
         builder: (context, state) {
           if (state is NoActiveSession) {
             return FloatingActionButton.extended(
               onPressed: () => _showSetLimit(context),
-              label: const Text("Limit Belirle"),
+              label: Text(_startSessionTooltip),
               icon: const Icon(Icons.add),
             );
           } else if (state is SessionActive) {
@@ -103,11 +109,11 @@ class ExpensePage extends StatelessWidget {
             ).colorScheme.onSurface.withValues(alpha: 0.6),
           ),
           const SizedBox(height: 16),
-          const Text(
-            "Aktif bir bütçe dönemi yok.",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+          Text(
+            _emptyStateText,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           ),
-          const Text("Başlamak için alttaki butona tıklayın."),
+          Text(_emptyStateHintText),
         ],
       ),
     );

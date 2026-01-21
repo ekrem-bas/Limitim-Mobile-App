@@ -1,15 +1,15 @@
-part of 'active_session_bloc.dart';
+part of 'session_bloc.dart';
 
-abstract class ActiveSessionEvent extends Equatable {
-  const ActiveSessionEvent();
+abstract class SessionEvent extends Equatable {
+  const SessionEvent();
 
   @override
   List<Object> get props => [];
 }
 
-final class CheckActiveSession extends ActiveSessionEvent {}
+final class CheckActiveSession extends SessionEvent {}
 
-final class StartNewSession extends ActiveSessionEvent {
+final class StartNewSession extends SessionEvent {
   final double limit;
   const StartNewSession(this.limit);
 
@@ -17,7 +17,7 @@ final class StartNewSession extends ActiveSessionEvent {
   List<Object> get props => [limit];
 }
 
-final class AddExpenseEvent extends ActiveSessionEvent {
+final class AddExpenseEvent extends SessionEvent {
   final String title;
   final double amount;
 
@@ -27,7 +27,7 @@ final class AddExpenseEvent extends ActiveSessionEvent {
   List<Object> get props => [title, amount];
 }
 
-final class DeleteExpenseEvent extends ActiveSessionEvent {
+final class DeleteExpenseEvent extends SessionEvent {
   final String expenseId;
   const DeleteExpenseEvent(this.expenseId);
 
@@ -35,7 +35,7 @@ final class DeleteExpenseEvent extends ActiveSessionEvent {
   List<Object> get props => [expenseId];
 }
 
-final class FinalizeSessionEvent extends ActiveSessionEvent {
+final class FinalizeSessionEvent extends SessionEvent {
   final String monthName;
   final int year;
 
