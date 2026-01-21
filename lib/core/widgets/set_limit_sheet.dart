@@ -4,7 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 
 class SetLimitSheet extends StatefulWidget {
-  const SetLimitSheet({super.key});
+  final double? initialLimit;
+  const SetLimitSheet({super.key, this.initialLimit});
 
   @override
   State<SetLimitSheet> createState() => _SetLimitSheetState();
@@ -13,15 +14,27 @@ class SetLimitSheet extends StatefulWidget {
 class _SetLimitSheetState extends State<SetLimitSheet> {
   final _limitController = TextEditingController();
   String? _limitError;
+
+  bool get _isEditing => widget.initialLimit != null;
+
   final String _invalidLimitError = "Lütfen geçerli bir limit girin";
   final String _limitLabelText = "Aylık Limit";
   final String _limitHintText = "Örn: 5000";
   final String _currencySuffix = "₺";
-  final String _newLimitTitle = "Yeni Limit Belirle";
-  final String _newLimitDescription =
-      "Bu ay için harcayabileceğiniz toplam miktarı giriniz.";
-  final String _startBudgetButtonText = "Bütçeyi Başlat";
+  String get _title => _isEditing ? "Limiti Güncelle" : "Yeni Limit Belirle";
+  String get _description => _isEditing
+      ? "Mevcut bütçe limitinizi değiştirmek için yeni miktarı giriniz."
+      : "Bu ay için harcayabileceğiniz toplam miktarı giriniz.";
+  String get _buttonText => _isEditing ? "Limiti Güncelle" : "Bütçeyi Başlat";
   final String _cancelButtonText = "Vazgeç";
+
+  @override
+  void initState() {
+    super.initState();
+    if (_isEditing) {
+      _limitController.text = widget.initialLimit.toString();
+    }
+  }
 
   void _submit() {
     final limitText = _limitController.text;
@@ -32,7 +45,13 @@ class _SetLimitSheetState extends State<SetLimitSheet> {
         _limitError = _invalidLimitError;
       });
     } else {
-      context.read<SessionBloc>().add(StartNewSession(limit));
+      if (_isEditing) {
+        // Update existing session limit
+        context.read<SessionBloc>().add(UpdateSessionLimit(limit));
+      } else {
+        // Start new session with limit
+        context.read<SessionBloc>().add(StartNewSession(limit));
+      }
       Navigator.pop(context);
     }
   }
@@ -72,12 +91,12 @@ class _SetLimitSheetState extends State<SetLimitSheet> {
     return Column(
       children: [
         Text(
-          _newLimitTitle,
+          _title,
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Text(
-          _newLimitDescription,
+          _description,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Theme.of(
@@ -124,7 +143,7 @@ class _SetLimitSheetState extends State<SetLimitSheet> {
         ),
         onPressed: _submit,
         child: Text(
-          _startBudgetButtonText,
+          _buttonText,
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),

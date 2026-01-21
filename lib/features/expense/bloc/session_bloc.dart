@@ -17,6 +17,8 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
     on<AddExpenseEvent>(_onAddExpenseEvent);
     on<DeleteExpenseEvent>(_onDeleteExpenseEvent);
     on<FinalizeSessionEvent>(_onFinalizeSession);
+    on<ResetSessionEvent>(_onResetSession);
+    on<UpdateSessionLimit>(_onUpdateSessionLimit);
 
     // check active session when app starts
     add(CheckActiveSession());
@@ -126,4 +128,26 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
       emit(SessionError('Failed to finalize session: $e'));
     }
   }
+
+  FutureOr<void> _onResetSession(
+    ResetSessionEvent event,
+    Emitter<SessionState> emit,
+  ) async {
+    emit(SessionLoading());
+
+    try {
+      // reset active session via repository
+      await repository.resetActiveSession();
+
+      // emit no active session state
+      emit(NoActiveSession());
+    } catch (e) {
+      emit(SessionError('Failed to reset session: $e'));
+    }
+  }
+
+  FutureOr<void> _onUpdateSessionLimit(
+    UpdateSessionLimit event,
+    Emitter<SessionState> emit,
+  ) {}
 }

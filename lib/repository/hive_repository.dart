@@ -29,6 +29,22 @@ class HiveRepository {
     await _monthBox.put(newMonth.id, newMonth);
   }
 
+  // delete active session (draft)
+  Future<void> resetActiveSession() async {
+    final activeSession = getActiveSession();
+    if (activeSession != null) {
+      // Delete all expenses associated with this active session
+      final expensesToDelete = _expenseBox.values
+          .where((expense) => expense.monthId == activeSession.id)
+          .toList();
+      for (var expense in expensesToDelete) {
+        await _expenseBox.delete(expense.id);
+      }
+      // Delete the active session month
+      await _monthBox.delete(activeSession.id);
+    }
+  }
+
   // When user finalizes the session, we update the month details
   Future<void> finalizeSession({
     required String monthId,

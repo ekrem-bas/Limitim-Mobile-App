@@ -9,6 +9,16 @@ abstract class SessionEvent extends Equatable {
 
 final class CheckActiveSession extends SessionEvent {}
 
+final class ResetSessionEvent extends SessionEvent {}
+
+final class UpdateSessionLimit extends SessionEvent {
+  final double newLimit;
+  const UpdateSessionLimit(this.newLimit);
+
+  @override
+  List<Object> get props => [newLimit];
+}
+
 final class StartNewSession extends SessionEvent {
   final double limit;
   const StartNewSession(this.limit);
