@@ -13,7 +13,7 @@ class CalendarScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const AppDrawer(),
-      appBar: AppBar(title: Text(_appBarTitle)),
+      appBar: AppBar(title: Text(_appBarTitle), scrolledUnderElevation: 0),
       body: BlocBuilder<CalendarCubit, CalendarState>(
         builder: (context, state) {
           if (state is CalendarInitial) {
