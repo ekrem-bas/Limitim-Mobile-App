@@ -8,7 +8,7 @@ class Expense {
   final String id;
 
   @HiveField(1)
-  final String monthId; 
+  final String monthId;
 
   @HiveField(2)
   final String title;
@@ -26,4 +26,14 @@ class Expense {
     required this.amount,
     required this.date,
   });
+
+  Expense copyWith({String? title, double? amount}) {
+    return Expense(
+      id: id,
+      monthId: monthId,
+      title: title ?? this.title,
+      amount: amount ?? this.amount,
+      date: date,
+    );
+  }
 }

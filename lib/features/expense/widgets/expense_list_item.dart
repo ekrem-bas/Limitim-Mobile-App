@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
+import 'package:limitim/features/expense/cubit/expense_detail_cubit.dart';
 import 'package:limitim/features/expense/models/expense.dart';
 import 'package:limitim/core/widgets/dismissible_card.dart';
+import 'package:limitim/features/expense/widgets/expense_detail_sheet.dart';
+import 'package:limitim/repository/hive_repository.dart';
 
 class ExpenseListItem extends StatelessWidget {
   final Expense expense;
@@ -20,6 +23,7 @@ class ExpenseListItem extends StatelessWidget {
         ).showSnackBar(SnackBar(content: Text('${expense.title} silindi')));
       },
       child: ListTile(
+        onTap: () => _showDetailSheet(context),
         title: Text(
           expense.title,
           style: const TextStyle(fontWeight: FontWeight.w500),
@@ -39,6 +43,20 @@ class ExpenseListItem extends StatelessWidget {
             color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
+      ),
+    );
+  }
+
+  void _showDetailSheet(BuildContext context) {
+    final sessionBloc = context.read<SessionBloc>();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent, // Köşelerin yuvarlak görünmesi için
+      builder: (sheetContext) => BlocProvider(
+        // Sheet açıldığında Cubit'i sadece bu alan için oluşturuyoruz
+        create: (context) => ExpenseDetailCubit(context.read<HiveRepository>()),
+        child: ExpenseDetailSheet(expense: expense),
       ),
     );
   }

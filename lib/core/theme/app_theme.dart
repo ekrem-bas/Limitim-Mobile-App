@@ -73,7 +73,10 @@ class AppTheme {
       }),
     ),
     extensions: <ThemeExtension<dynamic>>[
-      const AppColors(primary: Color(0xFF2E7D32), secondary: Color(0xFFC62828)),
+      const AppColors(
+        limitColor: Color(0xFF2E7D32),
+        expenseColor: Color(0xFFC62828),
+      ),
     ],
   );
 
@@ -141,23 +144,26 @@ class AppTheme {
       }),
     ),
     extensions: <ThemeExtension<dynamic>>[
-      const AppColors(primary: Color(0xFF66BB6A), secondary: Color(0xFFEF5350)),
+      const AppColors(
+        limitColor: Color(0xFF66BB6A),
+        expenseColor: Color(0xFFEF5350),
+      ),
     ],
   );
 }
 
 @immutable
 class AppColors extends ThemeExtension<AppColors> {
-  final Color? primary;
-  final Color? secondary;
+  final Color? limitColor;
+  final Color? expenseColor;
 
-  const AppColors({this.primary, this.secondary});
+  const AppColors({this.limitColor, this.expenseColor});
 
   @override
-  AppColors copyWith({Color? primary, Color? secondary}) {
+  AppColors copyWith({Color? limitColor, Color? expenseColor}) {
     return AppColors(
-      primary: primary ?? this.primary,
-      secondary: secondary ?? this.secondary,
+      limitColor: limitColor ?? this.limitColor,
+      expenseColor: expenseColor ?? this.expenseColor,
     );
   }
 
@@ -165,8 +171,8 @@ class AppColors extends ThemeExtension<AppColors> {
   AppColors lerp(ThemeExtension<AppColors>? other, double t) {
     if (other is! AppColors) return this;
     return AppColors(
-      primary: Color.lerp(primary, other.primary, t),
-      secondary: Color.lerp(secondary, other.secondary, t),
+      limitColor: Color.lerp(limitColor, other.limitColor, t),
+      expenseColor: Color.lerp(expenseColor, other.expenseColor, t),
     );
   }
 }

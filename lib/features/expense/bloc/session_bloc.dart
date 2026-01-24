@@ -19,6 +19,7 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
     on<FinalizeSessionEvent>(_onFinalizeSession);
     on<ResetSessionEvent>(_onResetSession);
     on<UpdateSessionLimit>(_onUpdateSessionLimit);
+    on<UpdateExpenseEvent>(_onUpdateExpenseEvent);
 
     // check active session when app starts
     add(CheckActiveSession());
@@ -159,6 +160,23 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
         add(CheckActiveSession());
       } catch (e) {
         emit(SessionError('Failed to update session limit: $e'));
+      }
+    }
+  }
+
+  FutureOr<void> _onUpdateExpenseEvent(
+    UpdateExpenseEvent event,
+    Emitter<SessionState> emit,
+  ) async {
+    if (state is SessionActive) {
+      try {
+        // update expense via repository
+        await repository.updateExpense(event.updatedExpense);
+
+        // call check active session to refresh state
+        add(CheckActiveSession());
+      } catch (e) {
+        emit(SessionError('Failed to update expense: $e'));
       }
     }
   }

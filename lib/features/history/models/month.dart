@@ -25,6 +25,9 @@ class Month {
   @HiveField(6)
   String? customName;
 
+  @HiveField(7)
+  final double totalSpent;
+
   Month({
     required this.id,
     required this.name,
@@ -33,6 +36,7 @@ class Month {
     this.year,
     required this.createdAt,
     this.customName,
+    this.totalSpent = 0.0,
   });
 
   Month copyWith({
@@ -41,6 +45,7 @@ class Month {
     String? name,
     bool? isDraft,
     int? year,
+    double? totalSpent,
   }) {
     return Month(
       id: id, // Mevcut ID'yi koru
@@ -50,6 +55,7 @@ class Month {
       year: year ?? this.year,
       createdAt: createdAt,
       customName: customName ?? this.customName,
+      totalSpent: totalSpent ?? this.totalSpent,
     );
   }
 }

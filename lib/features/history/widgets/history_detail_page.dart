@@ -38,14 +38,17 @@ class HistoryDetailPage extends StatelessWidget {
             ),
 
             if (month.hasCustomName)
-              Text(
-                "${month.name} ${month.year}",
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.normal,
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.6),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  "${month.name} ${month.year}",
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.6),
+                  ),
                 ),
               ),
           ],

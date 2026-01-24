@@ -63,11 +63,17 @@ class HiveRepository {
   }) async {
     final month = _monthBox.get(monthId);
     if (month != null) {
-      month.name = finalName;
-      month.year = finalYear;
-      month.isDraft = false; // Mark as finalized
-      month.customName = customName;
-      await _monthBox.put(month.id, month);
+      // create updated month with final details
+      final updatedMonth = month.copyWith(
+        name: finalName,
+        year: finalYear,
+        isDraft: false,
+        customName: customName,
+        totalSpent: getTotalSpent(monthId),
+      );
+
+      // save updated month
+      await _monthBox.put(month.id, updatedMonth);
     }
   }
 
@@ -85,6 +91,10 @@ class HiveRepository {
 
   Future<void> deleteExpense(String id) async {
     await _expenseBox.delete(id);
+  }
+
+  Future<void> updateExpense(Expense updatedExpense) async {
+    await _expenseBox.put(updatedExpense.id, updatedExpense);
   }
 
   // --- CALCULATIONS ---

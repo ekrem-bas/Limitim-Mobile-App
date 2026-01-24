@@ -28,7 +28,7 @@ class LimitView extends StatelessWidget {
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color:
-                        Theme.of(context).extension<AppColors>()?.primary ??
+                        Theme.of(context).extension<AppColors>()?.limitColor ??
                         Theme.of(context).colorScheme.secondary,
                   ),
                   maxLines: 1,
@@ -45,7 +45,9 @@ class LimitView extends StatelessWidget {
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color:
-                        Theme.of(context).extension<AppColors>()?.secondary ??
+                        Theme.of(
+                          context,
+                        ).extension<AppColors>()?.expenseColor ??
                         Theme.of(context).colorScheme.error,
                   ),
                   maxLines: 1,

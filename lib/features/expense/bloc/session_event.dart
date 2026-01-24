@@ -37,6 +37,14 @@ final class AddExpenseEvent extends SessionEvent {
   List<Object> get props => [title, amount];
 }
 
+final class UpdateExpenseEvent extends SessionEvent {
+  final Expense updatedExpense;
+  const UpdateExpenseEvent(this.updatedExpense);
+
+  @override
+  List<Object> get props => [updatedExpense];
+}
+
 final class DeleteExpenseEvent extends SessionEvent {
   final String expenseId;
   const DeleteExpenseEvent(this.expenseId);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:limitim/core/theme/app_theme.dart';
 import 'package:limitim/features/history/bloc/history_bloc.dart';
 import 'package:limitim/features/history/models/month.dart';
 import 'package:limitim/features/history/widgets/history_detail_page.dart';
@@ -10,6 +11,8 @@ class HistoryListItem extends StatelessWidget {
   const HistoryListItem({super.key, required this.month});
 
   final String _limitTextPrefix = "Limit: ";
+  final String _totalExpenseTextPrefix = "Toplam Harcama: ";
+  final String _remainingLimitTextPrefix = "Kalan Limit: ";
   @override
   Widget build(BuildContext context) {
     return DismissibleCard(
@@ -31,7 +34,24 @@ class HistoryListItem extends StatelessWidget {
             ),
           ],
         ),
-        subtitle: Text("$_limitTextPrefix${month.limit.toStringAsFixed(2)} ₺"),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("$_limitTextPrefix${month.limit.toStringAsFixed(2)} ₺"),
+            Text(
+              "$_totalExpenseTextPrefix${month.totalSpent.toStringAsFixed(2)} ₺",
+              style: TextStyle(
+                color: Theme.of(context).extension<AppColors>()?.expenseColor,
+              ),
+            ),
+            Text(
+              "$_remainingLimitTextPrefix${(month.limit - month.totalSpent).toStringAsFixed(2)} ₺",
+              style: TextStyle(
+                color: Theme.of(context).extension<AppColors>()?.limitColor,
+              ),
+            ),
+          ],
+        ),
         trailing: const Icon(Icons.chevron_right),
         onTap: () {
           Navigator.push(
