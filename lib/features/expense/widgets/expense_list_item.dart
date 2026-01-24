@@ -9,13 +9,21 @@ import 'package:limitim/repository/hive_repository.dart';
 
 class ExpenseListItem extends StatelessWidget {
   final Expense expense;
+  final bool isReadOnly;
 
-  const ExpenseListItem({super.key, required this.expense});
+  const ExpenseListItem({
+    super.key,
+    required this.expense,
+    required this.isReadOnly,
+  });
 
   @override
   Widget build(BuildContext context) {
     return DismissibleCard(
       id: expense.id,
+      direction: isReadOnly
+          ? DismissDirection.none
+          : DismissDirection.endToStart,
       onDismissed: (direction) {
         context.read<SessionBloc>().add(DeleteExpenseEvent(expense.id));
         ScaffoldMessenger.of(
@@ -23,7 +31,7 @@ class ExpenseListItem extends StatelessWidget {
         ).showSnackBar(SnackBar(content: Text('${expense.title} silindi')));
       },
       child: ListTile(
-        onTap: () => _showDetailSheet(context),
+        onTap: isReadOnly ? null : () => _showDetailSheet(context),
         title: Text(
           expense.title,
           style: const TextStyle(fontWeight: FontWeight.w500),
@@ -48,7 +56,6 @@ class ExpenseListItem extends StatelessWidget {
   }
 
   void _showDetailSheet(BuildContext context) {
-    final sessionBloc = context.read<SessionBloc>();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:limitim/core/widgets/app_drawer.dart';
 import 'package:limitim/features/history/bloc/history_bloc.dart';
 import 'package:limitim/features/history/widgets/history_list_view.dart';
 
@@ -12,6 +13,7 @@ class HistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const AppDrawer(),
       appBar: AppBar(
         title: Text(
           _appBarTitleText,

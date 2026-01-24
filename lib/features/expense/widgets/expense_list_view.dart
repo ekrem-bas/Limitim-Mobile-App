@@ -20,7 +20,7 @@ class ExpenseListView extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
       itemBuilder: (context, index) {
         final expense = sortedExpenses[index];
-        return ExpenseListItem(expense: expense);
+        return ExpenseListItem(expense: expense, isReadOnly: false);
       },
     );
   }

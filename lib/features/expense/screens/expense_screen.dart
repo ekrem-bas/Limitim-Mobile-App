@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:limitim/core/widgets/app_drawer.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 import 'package:limitim/features/expense/widgets/add_expense_sheet.dart';
 import 'package:limitim/features/expense/widgets/expense_list_view.dart';
@@ -19,6 +20,7 @@ class ExpenseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const AppDrawer(),
       appBar: AppBar(
         title: Text(
           _titleExpense,

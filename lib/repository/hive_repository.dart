@@ -85,6 +85,12 @@ class HiveRepository {
         .toList();
   }
 
+  List<Expense> getExpensesByMonths(DateTime date) {
+    return _expenseBox.values.where((expense) {
+      return expense.date.year == date.year && expense.date.month == date.month;
+    }).toList();
+  }
+
   Future<void> addExpense(Expense expense) async {
     await _expenseBox.put(expense.id, expense);
   }
@@ -131,5 +137,11 @@ class HiveRepository {
     for (var expense in expensesToDelete) {
       await _expenseBox.delete(expense.id);
     }
+  }
+
+  // --- DELETE ALL DATA ---
+  Future<void> clearAllData() async {
+    await Hive.box<Month>('months').clear();
+    await Hive.box<Expense>('expenses').clear();
   }
 }
