@@ -57,7 +57,10 @@ class HistoryDetailPage extends StatelessWidget {
       body: Column(
         children: [
           // 3. Display limit view
-          LimitView(limit: month.limit, totalExpense: totalSpent),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 5),
+            child: LimitView(limit: month.limit, totalExpense: totalSpent),
+          ),
           const Divider(height: 1),
           Expanded(child: _buildReadOnlyExpenseList(context, expenses)),
         ],

@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:limitim/core/splash/splash_screen.dart';
 import 'package:limitim/core/theme/cubit/text_scale_cubit.dart';
 import 'package:limitim/core/theme/cubit/theme_cubit.dart';
 import 'package:limitim/features/calendar/cubit/calendar_cubit.dart';
-import 'package:limitim/features/expense/models/expense.dart';
 import 'package:limitim/features/history/bloc/history_bloc.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
-import 'package:limitim/features/history/models/month.dart';
 import 'package:limitim/core/theme/app_theme.dart';
 import 'package:limitim/features/onboarding/cubit/onboarding_cubit.dart';
-import 'package:limitim/features/onboarding/screens/onboarding_wrapper.dart';
 import 'package:limitim/repository/hive_repository.dart';
 import 'package:path_provider/path_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // for hydrated_bloc set the storage directory
+  // HydratedBloc storage'ını ayarla
   final storage = await HydratedStorage.build(
     storageDirectory: HydratedStorageDirectory(
       (await getApplicationDocumentsDirectory()).path,
@@ -28,14 +25,8 @@ Future<void> main() async {
 
   HydratedBloc.storage = storage;
 
+  // turkish date formatting
   await initializeDateFormatting("tr_TR", null);
-
-  await Hive.initFlutter();
-  Hive.registerAdapter(MonthAdapter());
-  Hive.registerAdapter(ExpenseAdapter());
-
-  await Hive.openBox<Month>("months");
-  await Hive.openBox<Expense>("expenses");
 
   runApp(
     RepositoryProvider(
@@ -79,7 +70,7 @@ class MyApp extends StatelessWidget {
               theme: AppTheme.lightTheme(textScale),
               darkTheme: AppTheme.darkTheme(textScale),
               themeMode: mode,
-              home: const OnboardingWrapper(),
+              home: const SplashScreen(),
             );
           },
         );
