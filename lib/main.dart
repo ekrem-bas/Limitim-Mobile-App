@@ -10,8 +10,9 @@ import 'package:limitim/features/expense/models/expense.dart';
 import 'package:limitim/features/history/bloc/history_bloc.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 import 'package:limitim/features/history/models/month.dart';
-import 'package:limitim/core/root_page.dart';
 import 'package:limitim/core/theme/app_theme.dart';
+import 'package:limitim/features/onboarding/cubit/onboarding_cubit.dart';
+import 'package:limitim/features/onboarding/screens/onboarding_wrapper.dart';
 import 'package:limitim/repository/hive_repository.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -55,6 +56,7 @@ Future<void> main() async {
 
           BlocProvider(create: (context) => ThemeCubit()),
           BlocProvider(create: (context) => TextScaleCubit()),
+          BlocProvider(create: (context) => OnboardingCubit()),
         ],
         child: const MyApp(),
       ),
@@ -77,7 +79,7 @@ class MyApp extends StatelessWidget {
               theme: AppTheme.lightTheme(textScale),
               darkTheme: AppTheme.darkTheme(textScale),
               themeMode: mode,
-              home: const RootPage(),
+              home: const OnboardingWrapper(),
             );
           },
         );

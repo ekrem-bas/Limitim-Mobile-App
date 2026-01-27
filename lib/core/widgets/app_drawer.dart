@@ -5,6 +5,7 @@ import 'package:limitim/core/theme/cubit/theme_cubit.dart';
 import 'package:limitim/features/calendar/cubit/calendar_cubit.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 import 'package:limitim/features/history/bloc/history_bloc.dart';
+import 'package:limitim/features/onboarding/cubit/onboarding_cubit.dart';
 import 'package:limitim/repository/hive_repository.dart';
 
 // DrawerView enum to manage different views in the drawer
@@ -27,6 +28,7 @@ class _AppDrawerState extends State<AppDrawer> {
   final String _lightModeText = "Açık Mod";
   final String _darkModeText = "Koyu Mod";
   final String _systemModeText = "Sistem Ayarı";
+  final String _resetOnboardingText = "Tanıtımı Tekrar Göster";
   final String _clearDataText = "Tüm Verileri Temizle";
   final String _confirmationTitle = "Emin misiniz?";
   final String _warningText =
@@ -95,6 +97,16 @@ class _AppDrawerState extends State<AppDrawer> {
 
         const Spacer(),
         const Divider(),
+
+        // Reset Onboarding button
+        ListTile(
+          leading: const Icon(Icons.info_outline),
+          title: Text(_resetOnboardingText),
+          onTap: () {
+            context.read<OnboardingCubit>().resetOnboarding();
+            Navigator.pop(context); // Close drawer
+          },
+        ),
 
         // Clear Data button
         ListTile(
