@@ -76,7 +76,7 @@ class _UpdateExpenseSheetState extends State<UpdateExpenseSheet> {
         children: [
           Text(
             _titleLabelText,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.displayMedium,
           ),
           const SizedBox(height: 24),
 
@@ -131,7 +131,10 @@ class _UpdateExpenseSheetState extends State<UpdateExpenseSheet> {
         onPressed: _submit,
         child: Text(
           _updateButtonText,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
@@ -144,9 +147,8 @@ class _UpdateExpenseSheetState extends State<UpdateExpenseSheet> {
         onPressed: () => Navigator.pop(context),
         child: Text(
           _cancelButtonText,
-          style: TextStyle(
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: Theme.of(context).textTheme.bodySmall?.color,
-            fontSize: 15,
           ),
         ),
       ),

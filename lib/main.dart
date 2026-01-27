@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:limitim/core/theme/cubit/text_scale_cubit.dart';
 import 'package:limitim/core/theme/cubit/theme_cubit.dart';
 import 'package:limitim/features/calendar/cubit/calendar_cubit.dart';
 import 'package:limitim/features/expense/models/expense.dart';
@@ -53,6 +54,7 @@ Future<void> main() async {
           ),
 
           BlocProvider(create: (context) => ThemeCubit()),
+          BlocProvider(create: (context) => TextScaleCubit()),
         ],
         child: const MyApp(),
       ),
@@ -65,15 +67,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeMode>(
-      builder: (context, mode) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Limitim',
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          themeMode: mode,
-          home: const RootPage(),
+    return BlocBuilder<TextScaleCubit, double>(
+      builder: (context, textScale) {
+        return BlocBuilder<ThemeCubit, ThemeMode>(
+          builder: (context, mode) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Limitim',
+              theme: AppTheme.lightTheme(textScale),
+              darkTheme: AppTheme.darkTheme(textScale),
+              themeMode: mode,
+              home: const RootPage(),
+            );
+          },
         );
       },
     );

@@ -87,7 +87,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   Text _sheetTitle() {
     return Text(
       _titleLabelText,
-      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      style: Theme.of(context).textTheme.displayMedium,
     );
   }
 
@@ -111,9 +111,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         onPressed: () => Navigator.pop(context),
         child: Text(
           _cancelButtonText,
-          style: TextStyle(
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: Theme.of(context).textTheme.bodySmall?.color,
-            fontSize: 15,
           ),
         ),
       ),
@@ -133,7 +132,10 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         onPressed: _submit,
         child: Text(
           _addExpenseButtonText,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );

@@ -90,10 +90,7 @@ class _SetLimitSheetState extends State<SetLimitSheet> {
   Column _hintTextColumn(BuildContext context) {
     return Column(
       children: [
-        Text(
-          _title,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
+        Text(_title, style: Theme.of(context).textTheme.displayMedium),
         const SizedBox(height: 8),
         Text(
           _description,
@@ -144,7 +141,10 @@ class _SetLimitSheetState extends State<SetLimitSheet> {
         onPressed: _submit,
         child: Text(
           _buttonText,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
@@ -157,9 +157,8 @@ class _SetLimitSheetState extends State<SetLimitSheet> {
         onPressed: () => Navigator.pop(context),
         child: Text(
           _cancelButtonText,
-          style: TextStyle(
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: Theme.of(context).textTheme.bodySmall?.color,
-            fontSize: 15,
           ),
         ),
       ),

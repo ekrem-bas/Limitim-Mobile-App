@@ -38,16 +38,12 @@ class ExpenseListItem extends StatelessWidget {
         ),
         subtitle: Text(
           "${expense.date.day}/${expense.date.month}/${expense.date.year}",
-          style: TextStyle(
-            color: Theme.of(context).textTheme.bodySmall?.color,
-            fontSize: 12,
-          ),
+          style: Theme.of(context).textTheme.bodySmall,
         ),
         trailing: Text(
           "${expense.amount.toStringAsFixed(2)} ₺",
-          style: TextStyle(
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.bold,
-            fontSize: 16,
             color: Theme.of(context).colorScheme.onSurface,
           ),
         ),

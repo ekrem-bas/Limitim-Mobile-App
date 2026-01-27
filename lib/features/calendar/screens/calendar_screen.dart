@@ -30,6 +30,7 @@ class CalendarScreen extends StatelessWidget {
               children: [
                 // 1. calendar view
                 _buildCalendar(context, state),
+                const SizedBox(height: 8),
                 const Divider(height: 1),
                 // 2. list of expenses
                 Expanded(child: _buildExpenseList(context, state)),

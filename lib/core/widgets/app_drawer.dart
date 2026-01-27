@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:limitim/core/theme/cubit/text_scale_cubit.dart';
 import 'package:limitim/core/theme/cubit/theme_cubit.dart';
 import 'package:limitim/features/calendar/cubit/calendar_cubit.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
@@ -7,7 +8,7 @@ import 'package:limitim/features/history/bloc/history_bloc.dart';
 import 'package:limitim/repository/hive_repository.dart';
 
 // DrawerView enum to manage different views in the drawer
-enum DrawerView { main, theme }
+enum DrawerView { main, theme, textSize }
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer({super.key});
@@ -22,6 +23,7 @@ class _AppDrawerState extends State<AppDrawer> {
 
   final String _drawerTitle = "Limitim Ayarlar";
   final String _themeSelectionTitle = "Görünüm Ayarları";
+  final String _textSizeTitle = "Yazı Boyutu";
   final String _lightModeText = "Açık Mod";
   final String _darkModeText = "Koyu Mod";
   final String _systemModeText = "Sistem Ayarı";
@@ -41,7 +43,9 @@ class _AppDrawerState extends State<AppDrawer> {
         duration: const Duration(milliseconds: 300),
         child: _currentView == DrawerView.main
             ? _buildMainView(context)
-            : _buildThemeView(context),
+            : _currentView == DrawerView.theme
+            ? _buildThemeView(context)
+            : _buildTextSizeView(context),
       ),
     );
   }
@@ -76,6 +80,16 @@ class _AppDrawerState extends State<AppDrawer> {
           trailing: const Icon(Icons.chevron_right),
           onTap: () {
             setState(() => _currentView = DrawerView.theme);
+          },
+        ),
+
+        // Text Size Selection ListTile
+        ListTile(
+          leading: const Icon(Icons.text_fields),
+          title: Text(_textSizeTitle),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () {
+            setState(() => _currentView = DrawerView.textSize);
           },
         ),
 
@@ -141,6 +155,122 @@ class _AppDrawerState extends State<AppDrawer> {
                   _buildThemeOption(_lightModeText, ThemeMode.light),
                   _buildThemeOption(_darkModeText, ThemeMode.dark),
                   _buildThemeOption(_systemModeText, ThemeMode.system),
+                ],
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  // --- 3. TEXT SIZE VIEW ---
+  Widget _buildTextSizeView(BuildContext context) {
+    return Column(
+      key: const ValueKey("TextSizeView"),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Back Header
+        SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 8, left: 8, bottom: 4),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () =>
+                      setState(() => _currentView = DrawerView.main),
+                ),
+                Text(
+                  _textSizeTitle,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const Divider(),
+
+        // Text Size Slider
+        BlocBuilder<TextScaleCubit, double>(
+          builder: (context, currentScale) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Preview text
+                  Center(
+                    child: Text(
+                      'Örnek Metin',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Center(
+                    child: Text(
+                      'Bu yazı boyutunun önizlemesidir',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Scale percentage display
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Yazı Boyutu'),
+                      Text(
+                        '${(currentScale * 100).round()}%',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Slider
+                  Slider(
+                    value: currentScale,
+                    min: 0.8,
+                    max: 1.5,
+                    divisions: 14,
+                    label: '${(currentScale * 100).round()}%',
+                    onChanged: (value) {
+                      context.read<TextScaleCubit>().updateScale(value);
+                    },
+                  ),
+
+                  // Scale labels
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Küçük', style: TextStyle(fontSize: 11)),
+                      Text('Normal', style: TextStyle(fontSize: 11)),
+                      Text('Büyük', style: TextStyle(fontSize: 11)),
+                    ],
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Reset to default button
+                  Center(
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        context.read<TextScaleCubit>().updateScale(1.0);
+                      },
+                      icon: const Icon(Icons.refresh, size: 18),
+                      label: const Text('Varsayılana Dön'),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             );

@@ -85,10 +85,7 @@ class _SaveExpensesSheetState extends State<SaveExpensesSheet> {
               children: [
                 Text(
                   _finalizeSessionText,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context).textTheme.displayMedium,
                 ),
 
                 const SizedBox(height: 8),
@@ -163,7 +160,15 @@ class _SaveExpensesSheetState extends State<SaveExpensesSheet> {
                       ),
                     ),
                     onPressed: _onConfirm,
-                    child: Text(_confirmButtonText),
+                    child: Text(
+                      _confirmButtonText,
+                      style: TextStyle(
+                        fontSize: Theme.of(
+                          context,
+                        ).textTheme.bodyLarge?.fontSize,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -175,9 +180,8 @@ class _SaveExpensesSheetState extends State<SaveExpensesSheet> {
                     onPressed: () => Navigator.pop(context),
                     child: Text(
                       _cancelButtonText,
-                      style: TextStyle(
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(context).textTheme.bodySmall?.color,
-                        fontSize: 15,
                       ),
                     ),
                   ),

@@ -77,10 +77,7 @@ class ExpenseDetailSheet extends StatelessWidget {
             children: [
               Text(
                 expense.title,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(context).textTheme.displayLarge,
               ),
               const Text(
                 expenseDetailText,
@@ -128,12 +125,11 @@ class ExpenseDetailSheet extends StatelessWidget {
       children: [
         Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
         const SizedBox(width: 12),
-        Text(label, style: const TextStyle(fontSize: 16)),
+        Text(label, style: Theme.of(context).textTheme.bodyLarge),
         const Spacer(),
         Text(
           value,
-          style: TextStyle(
-            fontSize: 16,
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
             fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
             color: isBold ? Theme.of(context).colorScheme.error : null,
           ),

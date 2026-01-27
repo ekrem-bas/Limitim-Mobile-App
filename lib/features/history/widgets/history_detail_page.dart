@@ -34,7 +34,7 @@ class HistoryDetailPage extends StatelessWidget {
               month.hasCustomName
                   ? month.customName!
                   : "${month.name} ${month.year}",
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
 
             if (month.hasCustomName)
@@ -42,8 +42,7 @@ class HistoryDetailPage extends StatelessWidget {
                 fit: BoxFit.scaleDown,
                 child: Text(
                   "${month.name} ${month.year}",
-                  style: TextStyle(
-                    fontSize: 12,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontWeight: FontWeight.normal,
                     color: Theme.of(
                       context,
@@ -105,7 +104,9 @@ class HistoryDetailPage extends StatelessWidget {
             ),
             trailing: Text(
               "${expense.amount.toStringAsFixed(2)} ₺",
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
           ),
         );

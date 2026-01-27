@@ -75,9 +75,12 @@ class ExpenseScreen extends StatelessWidget {
                     context,
                     initialLimit: state.activeMonth.limit,
                   ),
-                  child: LimitView(
-                    limit: state.activeMonth.limit,
-                    totalExpense: state.totalSpent,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 5),
+                    child: LimitView(
+                      limit: state.activeMonth.limit,
+                      totalExpense: state.totalSpent,
+                    ),
                   ),
                 ),
                 const Divider(height: 1),
@@ -127,10 +130,7 @@ class ExpenseScreen extends StatelessWidget {
             ).colorScheme.onSurface.withValues(alpha: 0.6),
           ),
           const SizedBox(height: 16),
-          Text(
-            _emptyStateText,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-          ),
+          Text(_emptyStateText, style: Theme.of(context).textTheme.titleLarge),
           Text(_emptyStateHintText),
         ],
       ),
