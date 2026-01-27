@@ -31,62 +31,51 @@
 
 ## 🎨 Ekran Görüntüleri
 
-<table table-layout="fixed" width="100%">
-  <thead>
-    <tr>
-      <th width="20%"></th>
-      <th width="20%"></th>
-      <th width="20%"></th>
-      <th width="20%"></th>
-      <th width="20%"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
+<table width="100%">
+  <tr>
+    <td width="20%" align="center">
+      <img src="screenshots/onboarding.png" width="100%" /><br>
+      <sub><b>Onboard Sayfası</b></sub>
+    </td>
+    <td width="20%" align="center">
+      <img src="screenshots/main_screen.png" width="100%" /><br>
+      <sub><b>Ana Sayfa</b></sub>
+    </td>
+    <td width="20%" align="center">
+      <img src="screenshots/start_session.png" width="200" /><br>
+      <sub><b>Yeni Dönem Başlatma</b></sub>
+    </td>
+    <td width="20%" align="center">
+      <img src="screenshots/add_new_expense.png" width="200" /><br>
+      <sub><b>Yeni Harcama Ekleme</b></sub>
+    </td>
+    <td width="20%" align="center">
+      <img src="screenshots/expense_screen.png" width="200" /><br>
+      <sub><b>Harcamalar</b></sub>
+    </td>
+  </tr>
+  <tr>
     <td align="center">
-        <img src="screenshots/onboarding.png" width="200" /><br>
-        <sub><b>Onboard Sayfası</b></sub>
-      </td>
-      <td align="center">
-        <img src="screenshots/main_screen.png" width="200" /><br>
-        <sub><b>Ana Sayfa</b></sub>
-      </td>
-      <td align="center">
-        <img src="screenshots/start_session.png" width="200" /><br>
-        <sub><b>Yeni Dönem Başlatma</b></sub>
-      </td>
-      <td align="center">
-        <img src="screenshots/add_new_expense.png" width="200" /><br>
-        <sub><b>Yeni Harcama Ekleme</b></sub>
-      </td>
-      <td align="center">
-        <img src="screenshots/expense_screen.png" width="200" /><br>
-        <sub><b>Harcamalar</b></sub>
-      </td>
-    </tr>
-    <tr>
-      <td align="center">
-        <img src="screenshots/expense_detail.png" width="200" /><br>
-        <sub><b>Harcama Detayı</b></sub>
-      </td>
-      <td align="center">
-        <img src="screenshots/save_session.png" width="200" /><br>
-        <sub><b>Dönemi Kaydet</b></sub>
-      </td>
-      <td align="center">
-        <img src="screenshots/calendar_view.png" width="200" /><br>
-        <sub><b>Takvim Görünümü</b></sub>
-      </td>
-      <td align="center">
-        <img src="screenshots/history_page.png" width="200" /><br>
-        <sub><b>Geçmiş Görünümü</b></sub>
-      </td>
-      <td align="center">
-        <img src="screenshots/history_detail_page.png" width="200" /><br>
-        <sub><b>Geçmiş Detay Görünümü</b></sub>
-      </td>
-    </tr>
-  </tbody>
+      <img src="screenshots/expense_detail.png" width="200" /><br>
+      <sub><b>Harcama Detayı</b></sub>
+    </td>
+    <td align="center">
+      <img src="screenshots/save_session.png" width="200" /><br>
+      <sub><b>Dönemi Kaydet</b></sub>
+    </td>
+    <td align="center">
+      <img src="screenshots/calendar_view.png" width="200" /><br>
+      <sub><b>Takvim Görünümü</b></sub>
+    </td>
+    <td align="center">
+      <img src="screenshots/history_page.png" width="200" /><br>
+      <sub><b>Geçmiş Görünümü</b></sub>
+    </td>
+    <td align="center">
+      <img src="screenshots/history_detail_page.png" width="200" /><br>
+      <sub><b>Geçmiş Detay Görünümü</b></sub>
+    </td>
+  </tr>
 </table>
 
 ---
