@@ -31,7 +31,13 @@ class _RootPageState extends State<RootPage> {
       Navigator.pop(context);
     }
 
-    if (_currentIndex == index) return; // prevent reloading the same page
+    if (_currentIndex == index) {
+      if (index == 1) {
+        // refresh calendar data if already on calendar page
+        _refreshCalendar(context);
+      }
+      return;
+    }
 
     setState(() => _currentIndex = index);
 
@@ -129,15 +135,6 @@ class _RootPageState extends State<RootPage> {
   }
 
   void _refreshCalendar(BuildContext context) {
-    final calendarCubit = context.read<CalendarCubit>();
-    final currentState = calendarCubit.state;
-
-    if (currentState is CalendarLoaded) {
-      // if already loaded, refresh the current month
-      calendarCubit.loadMonth(currentState.focusedMonth);
-    } else {
-      // otherwise, load the current month
-      calendarCubit.loadMonth(DateTime.now());
-    }
+    context.read<CalendarCubit>().loadMonth(DateTime.now());
   }
 }
