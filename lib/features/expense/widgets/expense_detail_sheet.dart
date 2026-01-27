@@ -94,6 +94,7 @@ class ExpenseDetailSheet extends StatelessWidget {
     const String amountLabel = "Tutar";
     const String currencyLabel = "₺";
     const String dateLabel = "Tarih";
+    const String hourLabel = "Saat";
     return Column(
       children: [
         _infoTile(
@@ -109,6 +110,13 @@ class ExpenseDetailSheet extends StatelessWidget {
           Icons.calendar_today_outlined,
           dateLabel,
           "${expense.date.day}/${expense.date.month}/${expense.date.year}",
+        ),
+        const Divider(height: 32),
+        _infoTile(
+          context,
+          Icons.access_time_outlined,
+          hourLabel,
+          "${expense.date.hour.toString().padLeft(2, '0')}:${expense.date.minute.toString().padLeft(2, '0')}",
         ),
       ],
     );

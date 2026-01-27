@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 
 class SaveExpensesSheet extends StatefulWidget {
@@ -42,7 +41,7 @@ class _SaveExpensesSheetState extends State<SaveExpensesSheet> {
   }
 
   void _onConfirm() {
-    final String customName = capitalize(_customNameController.text.trim());
+    final String customName = _customNameController.text.trim();
     context.read<SessionBloc>().add(
       FinalizeSessionEvent(
         monthName: _selectedMonth,
@@ -194,9 +193,4 @@ class _SaveExpensesSheetState extends State<SaveExpensesSheet> {
       ),
     );
   }
-}
-
-String capitalize(String text) {
-  if (text.isEmpty) return text;
-  return toBeginningOfSentenceCase(text.toLowerCase()) ?? text;
 }

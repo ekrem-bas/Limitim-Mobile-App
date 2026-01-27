@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 import 'package:limitim/features/expense/models/expense.dart';
 
@@ -39,7 +38,7 @@ class _UpdateExpenseSheetState extends State<UpdateExpenseSheet> {
   }
 
   void _submit() {
-    final title = capitalize(_titleController.text.trim());
+    final title = _titleController.text.trim();
     final amountText = _amountController.text.replaceAll(',', '.');
     final amount = double.tryParse(amountText);
 
@@ -161,9 +160,4 @@ class _UpdateExpenseSheetState extends State<UpdateExpenseSheet> {
     _amountController.dispose();
     super.dispose();
   }
-}
-
-String capitalize(String text) {
-  if (text.isEmpty) return text;
-  return toBeginningOfSentenceCase(text.toLowerCase()) ?? text;
 }
