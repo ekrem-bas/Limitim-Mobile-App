@@ -29,6 +29,14 @@
 
 ---
 
+## 📥 İndir
+
+Uygulamanın en güncel halini denemek için aşağıdaki butona tıklayarak APK dosyasını indirebilirsiniz:
+
+[![Download APK](https://img.shields.io/badge/Download-APK-green?style=for-the-badge&logo=android)](https://github.com/ekrem-bas/limitim/releases/latest)
+
+---
+
 ## 🎨 Ekran Görüntüleri
 
 <table width="100%">
