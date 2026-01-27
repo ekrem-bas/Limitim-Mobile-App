@@ -17,3 +17,5 @@ final class DeleteHistoryMonthEvent extends HistoryEvent {
   @override
   List<Object> get props => [monthId];
 }
+
+final class ClearHistoryEvent extends HistoryEvent {}

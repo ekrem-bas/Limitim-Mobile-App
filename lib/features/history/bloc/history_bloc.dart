@@ -14,6 +14,7 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
   HistoryBloc({required this.repository}) : super(HistoryLoading()) {
     on<LoadHistoryEvent>(_onLoadHistory);
     on<DeleteHistoryMonthEvent>(_onDeleteHistoryMonth);
+    on<ClearHistoryEvent>(_onClearHistory);
   }
 
   FutureOr<void> _onLoadHistory(
@@ -48,5 +49,14 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     } catch (e) {
       emit(HistoryError("Failed to delete month: $e"));
     }
+  }
+
+  // when user clears history
+  // emit new state with empty list
+  FutureOr<void> _onClearHistory(
+    ClearHistoryEvent event,
+    Emitter<HistoryState> emit,
+  ) {
+    emit(HistoryEmpty());
   }
 }

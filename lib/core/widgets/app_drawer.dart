@@ -20,6 +20,7 @@ class AppDrawer extends StatelessWidget {
       "Bu işlem tüm verilerinizi kalıcı olarak silecektir. Bu işlemi geri alamazsınız.";
   final String _snackbarText = "Tüm veriler temizlendi";
   final String _deleteAllText = "Hepsini Sil";
+  final String _cancelText = "Vazgeç";
 
   @override
   Widget build(BuildContext context) {
@@ -102,50 +103,33 @@ class AppDrawer extends StatelessWidget {
   }
 
   // dialog for confirming data deletion
-  void _showClearDataDialog(BuildContext context) {
-    showDialog(
+  Future<void> _showClearDataDialog(BuildContext context) async {
+    // 1. show confirmation dialog
+    final bool? shouldDelete = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(_confirmationTitle),
         content: Text(_warningText),
         actions: [
+          // cancel button
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.surface,
               elevation: 0,
             ),
-            onPressed: () async {
-              // 1. clear all data from Hive storage
-              await context.read<HiveRepository>().clearAllData();
-
-              if (context.mounted) {
-                // 2. send "refresh" command to all Blocs (clearing RAM data)
-                context.read<HistoryBloc>().add(LoadHistoryEvent());
-                context.read<SessionBloc>().add(ResetSessionEvent());
-
-                // 3. refresh calendar data
-                context.read<CalendarCubit>().loadMonth(DateTime.now());
-
-                Navigator.pop(context);
-              }
-            },
+            onPressed: () => Navigator.pop(context, false), // returns false
             child: Text(
-              "Vazgeç",
+              _cancelText,
               style: TextStyle(color: Theme.of(context).colorScheme.primary),
             ),
           ),
-          const SizedBox(height: 8),
+          // confirm button
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            onPressed: () async {
-              await context.read<HiveRepository>().clearAllData(); // Veriyi sil
-              if (context.mounted) {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(_snackbarText)));
-              }
-            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              elevation: 0,
+            ),
+            onPressed: () => Navigator.pop(context, true), // returns true
             child: Text(
               _deleteAllText,
               style: const TextStyle(color: Colors.white),
@@ -154,5 +138,28 @@ class AppDrawer extends StatelessWidget {
         ],
       ),
     );
+
+    // 2. if confirmed, proceed to delete data
+    if (shouldDelete == true && context.mounted) {
+      // close the drawer
+      Navigator.pop(context);
+
+      // clear all data from repository
+      await context.read<HiveRepository>().clearAllData();
+
+      // reset blocs and cubits to initial states
+      if (context.mounted) {
+        context.read<HistoryBloc>().add(LoadHistoryEvent());
+        context.read<SessionBloc>().add(ResetSessionEvent());
+        context.read<CalendarCubit>().loadMonth(DateTime.now());
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(_snackbarText),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    }
   }
 }
