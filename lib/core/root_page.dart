@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:limitim/core/theme/cubit/text_scale_cubit.dart';
 import 'package:limitim/features/calendar/cubit/calendar_cubit.dart';
@@ -16,6 +17,10 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
+  // channel that communicates with android background service
+  static const platform = MethodChannel('com.ekrembas.limitim/background');
+
+  // page index
   int _currentIndex = 0;
 
   // list of pages
@@ -80,43 +85,56 @@ class _RootPageState extends State<RootPage> {
           },
         ),
       ],
-      child: Scaffold(
-        body: IndexedStack(index: _currentIndex, children: pages),
-        bottomNavigationBar: BlocBuilder<TextScaleCubit, double>(
-          builder: (context, textScale) {
-            final iconSize = 24.0 * textScale;
-            final labelFontSize = 12.0 * textScale;
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) async {
+          // if already popped, do nothing
+          if (didPop) return;
+          try {
+            // trigger moving app to background
+            await platform.invokeMethod('sendToBackground');
+          } on PlatformException catch (e) {
+            debugPrint("Failed to invoke method: '${e.message}'.");
+          }
+        },
+        child: Scaffold(
+          body: IndexedStack(index: _currentIndex, children: pages),
+          bottomNavigationBar: BlocBuilder<TextScaleCubit, double>(
+            builder: (context, textScale) {
+              final iconSize = 24.0 * textScale;
+              final labelFontSize = 12.0 * textScale;
 
-            return BottomNavigationBar(
-              backgroundColor:
-                  Theme.of(context).navigationBarTheme.backgroundColor ??
-                  Theme.of(context).colorScheme.surface,
-              selectedItemColor: Theme.of(context).colorScheme.primary,
-              selectedFontSize: labelFontSize,
-              unselectedFontSize: labelFontSize,
-              selectedIconTheme: IconThemeData(size: iconSize),
-              unselectedIconTheme: IconThemeData(size: iconSize),
-              currentIndex: _currentIndex,
-              onTap: _onItemTapped,
-              items: [
-                _navBarItem(
-                  icon: const Icon(Icons.home_outlined),
-                  activeIcon: const Icon(Icons.home),
-                  label: _titleExpense,
-                ),
-                _navBarItem(
-                  icon: const Icon(Icons.calendar_month_outlined),
-                  activeIcon: const Icon(Icons.calendar_month),
-                  label: _titleCalendar,
-                ),
-                _navBarItem(
-                  icon: const Icon(Icons.history_outlined),
-                  activeIcon: const Icon(Icons.history),
-                  label: _titleHistory,
-                ),
-              ],
-            );
-          },
+              return BottomNavigationBar(
+                backgroundColor:
+                    Theme.of(context).navigationBarTheme.backgroundColor ??
+                    Theme.of(context).colorScheme.surface,
+                selectedItemColor: Theme.of(context).colorScheme.primary,
+                selectedFontSize: labelFontSize,
+                unselectedFontSize: labelFontSize,
+                selectedIconTheme: IconThemeData(size: iconSize),
+                unselectedIconTheme: IconThemeData(size: iconSize),
+                currentIndex: _currentIndex,
+                onTap: _onItemTapped,
+                items: [
+                  _navBarItem(
+                    icon: const Icon(Icons.home_outlined),
+                    activeIcon: const Icon(Icons.home),
+                    label: _titleExpense,
+                  ),
+                  _navBarItem(
+                    icon: const Icon(Icons.calendar_month_outlined),
+                    activeIcon: const Icon(Icons.calendar_month),
+                    label: _titleCalendar,
+                  ),
+                  _navBarItem(
+                    icon: const Icon(Icons.history_outlined),
+                    activeIcon: const Icon(Icons.history),
+                    label: _titleHistory,
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
