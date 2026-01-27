@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:limitim/features/expense/models/expense.dart';
+import 'package:limitim/features/expense/widgets/expense_list_item.dart';
 import 'package:limitim/features/history/models/month.dart';
 import 'package:limitim/core/widgets/limit_view.dart';
 import 'package:limitim/repository/hive_repository.dart';
@@ -94,25 +95,7 @@ class HistoryDetailPage extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
       itemBuilder: (context, index) {
         final expense = expenses[index];
-        return Card(
-          margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-          elevation: 0.5,
-          child: ListTile(
-            title: Text(
-              expense.title,
-              style: const TextStyle(fontWeight: FontWeight.w500),
-            ),
-            subtitle: Text(
-              "${expense.date.day}/${expense.date.month}/${expense.date.year}",
-            ),
-            trailing: Text(
-              "${expense.amount.toStringAsFixed(2)} ₺",
-              style: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-            ),
-          ),
-        );
+        return ExpenseListItem(expense: expense, isReadOnly: true);
       },
     );
   }

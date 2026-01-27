@@ -7,7 +7,12 @@ import 'package:limitim/features/expense/widgets/update_expense_sheet.dart';
 
 class ExpenseDetailSheet extends StatelessWidget {
   final Expense expense;
-  const ExpenseDetailSheet({super.key, required this.expense});
+  final bool isReadOnly;
+  const ExpenseDetailSheet({
+    super.key,
+    required this.expense,
+    this.isReadOnly = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +41,10 @@ class ExpenseDetailSheet extends StatelessWidget {
               const SizedBox(height: 40),
 
               // 4. action buttons
-              _buildActionButtons(context),
-              const SizedBox(height: 16),
+              if (!isReadOnly) ...[
+                _buildActionButtons(context),
+                const SizedBox(height: 16),
+              ],
             ],
           ),
         ),

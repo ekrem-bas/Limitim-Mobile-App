@@ -31,7 +31,7 @@ class ExpenseListItem extends StatelessWidget {
         ).showSnackBar(SnackBar(content: Text('${expense.title} silindi')));
       },
       child: ListTile(
-        onTap: isReadOnly ? null : () => _showDetailSheet(context),
+        onTap: () => _showDetailSheet(context),
         title: Text(
           expense.title,
           style: const TextStyle(fontWeight: FontWeight.w500),
@@ -55,12 +55,19 @@ class ExpenseListItem extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent, // Köşelerin yuvarlak görünmesi için
-      builder: (sheetContext) => BlocProvider(
-        // Sheet açıldığında Cubit'i sadece bu alan için oluşturuyoruz
-        create: (context) => ExpenseDetailCubit(context.read<HiveRepository>()),
-        child: ExpenseDetailSheet(expense: expense),
-      ),
+      backgroundColor: Colors.transparent,
+      builder: (sheetContext) => isReadOnly
+          // if it is readOnly, show the sheet without BlocProvider (do not need to manage state)
+          ? ExpenseDetailSheet(expense: expense, isReadOnly: true)
+          : BlocProvider(
+              // provide ExpenseDetailCubit to the sheet
+              create: (context) =>
+                  ExpenseDetailCubit(context.read<HiveRepository>()),
+              child: ExpenseDetailSheet(
+                expense: expense,
+                isReadOnly: isReadOnly,
+              ),
+            ),
     );
   }
 }
