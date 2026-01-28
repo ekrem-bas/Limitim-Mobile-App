@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:limitim/core/theme/app_theme.dart';
+import 'package:limitim/core/utils/currency_helper.dart';
 import 'package:limitim/features/history/bloc/history_bloc.dart';
 import 'package:limitim/features/history/models/month.dart';
 import 'package:limitim/features/history/widgets/history_detail_page.dart';
@@ -37,15 +38,15 @@ class HistoryListItem extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("$_limitTextPrefix${month.limit.toStringAsFixed(2)} ₺"),
+            Text("$_limitTextPrefix${CurrencyHelper.format(month.limit)} ₺"),
             Text(
-              "$_totalExpenseTextPrefix${month.totalSpent.toStringAsFixed(2)} ₺",
+              "$_totalExpenseTextPrefix${CurrencyHelper.format(month.totalSpent)} ₺",
               style: TextStyle(
                 color: Theme.of(context).extension<AppColors>()?.expenseColor,
               ),
             ),
             Text(
-              "$_remainingLimitTextPrefix${(month.limit - month.totalSpent).toStringAsFixed(2)} ₺",
+              "$_remainingLimitTextPrefix${CurrencyHelper.format(month.limit - month.totalSpent)} ₺",
               style: TextStyle(
                 color: Theme.of(context).extension<AppColors>()?.limitColor,
               ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:limitim/core/utils/currency_formatter.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 
 class AddExpenseSheet extends StatefulWidget {
@@ -26,7 +28,12 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   void _submit() {
     final title = _titleController.text.trim();
-    final amountText = _amountController.text.replaceAll(',', '.');
+    final amountText = _amountController.text
+        .replaceAll('.', '') // Binlik ayırıcı noktaları kaldır
+        .replaceAll(
+          ',',
+          '.',
+        ); // Ondalık virgülü noktaya çevir (Dart double için nokta ister)
     final amount = double.tryParse(amountText);
 
     setState(() {
@@ -94,6 +101,11 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     return TextField(
       controller: _amountController,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      inputFormatters: [
+        // Convert comma to dot immediately
+        FilteringTextInputFormatter.allow(RegExp(r'[\d,]')),
+        CurrencyFormatter(), // Yazarken noktaları/virgülleri koy
+      ],
       decoration: InputDecoration(
         labelText: _amountLabelText,
         suffixText: _amountCurrencySuffix,

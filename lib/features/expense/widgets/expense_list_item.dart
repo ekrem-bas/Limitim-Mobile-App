@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:limitim/core/utils/currency_helper.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 import 'package:limitim/features/expense/cubit/expense_detail_cubit.dart';
 import 'package:limitim/features/expense/models/expense.dart';
@@ -41,7 +42,7 @@ class ExpenseListItem extends StatelessWidget {
           style: Theme.of(context).textTheme.bodySmall,
         ),
         trailing: Text(
-          "${expense.amount.toStringAsFixed(2)} ₺",
+          CurrencyHelper.format(expense.amount),
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: Theme.of(context).colorScheme.onSurface,

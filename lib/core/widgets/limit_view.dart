@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:limitim/core/theme/app_theme.dart';
+import 'package:limitim/core/utils/currency_helper.dart';
 
 class LimitView extends StatelessWidget {
   // limit - totalExpense
@@ -39,7 +40,7 @@ class LimitView extends StatelessWidget {
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      '${(limit - totalExpense).toStringAsFixed(2)} ₺',
+                      CurrencyHelper.format(limit - totalExpense),
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color:
@@ -85,7 +86,7 @@ class LimitView extends StatelessWidget {
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerRight,
                     child: Text(
-                      '${totalExpense.toStringAsFixed(2)} ₺',
+                      CurrencyHelper.format(totalExpense),
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color:

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:limitim/core/utils/currency_helper.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 import 'package:limitim/features/expense/cubit/expense_detail_cubit.dart';
 import 'package:limitim/features/expense/models/expense.dart';
@@ -108,7 +109,7 @@ class ExpenseDetailSheet extends StatelessWidget {
           context,
           Icons.payments_outlined,
           amountLabel,
-          "${expense.amount.toStringAsFixed(2)} $currencyLabel",
+          "${CurrencyHelper.format(expense.amount)} $currencyLabel",
           isBold: true,
         ),
         const Divider(height: 32),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:limitim/core/utils/currency_formatter.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 
 class SetLimitSheet extends StatefulWidget {
@@ -37,19 +38,25 @@ class _SetLimitSheetState extends State<SetLimitSheet> {
   }
 
   void _submit() {
-    final limitText = _limitController.text;
-    final limit = double.tryParse(limitText);
+    // 1. Görsel formatı temizle: Noktaları sil, virgülü noktaya çevir
+    final cleanText = _limitController.text
+        .replaceAll('.', '') // Binlik ayırıcı noktaları kaldır
+        .replaceAll(
+          ',',
+          '.',
+        ); // Ondalık virgülü noktaya çevir (Dart double için nokta ister)
+
+    final limit = double.tryParse(cleanText);
 
     if (limit == null || limit <= 0) {
       setState(() {
         _limitError = _invalidLimitError;
       });
     } else {
+      
       if (_isEditing) {
-        // Update existing session limit
         context.read<SessionBloc>().add(UpdateSessionLimit(limit));
       } else {
-        // Start new session with limit
         context.read<SessionBloc>().add(StartNewSession(limit));
       }
       Navigator.pop(context);
@@ -112,9 +119,8 @@ class _SetLimitSheetState extends State<SetLimitSheet> {
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       inputFormatters: [
         // Convert comma to dot immediately
-        TextInputFormatter.withFunction((oldValue, newValue) {
-          return newValue.copyWith(text: newValue.text.replaceAll(',', '.'));
-        }),
+        FilteringTextInputFormatter.allow(RegExp(r'[\d,]')),
+        CurrencyFormatter(), // Yazarken noktaları/virgülleri koy
       ],
       decoration: InputDecoration(
         labelText: _limitLabelText,
