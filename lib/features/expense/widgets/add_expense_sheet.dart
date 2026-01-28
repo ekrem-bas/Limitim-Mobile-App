@@ -20,6 +20,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   final String _cancelButtonText = "Vazgeç";
   final String _titleErrorText = "Başlık gerekli";
   final String _amountErrorText = "Geçerli bir tutar girin";
+  final String _amountHintText = "Örn: 1.250,50";
 
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
@@ -103,7 +104,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       inputFormatters: [
         // Convert comma to dot immediately
-        FilteringTextInputFormatter.allow(RegExp(r'[\d,]')),
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9,.]')),
         CurrencyFormatter(), // Yazarken noktaları/virgülleri koy
       ],
       decoration: InputDecoration(
@@ -111,6 +112,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         suffixText: _amountCurrencySuffix,
         errorText: _amountError,
         border: const OutlineInputBorder(),
+        hintText: _amountHintText,
       ),
     );
   }

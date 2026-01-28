@@ -7,41 +7,45 @@ class CurrencyFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    // clear text if empty
-    if (newValue.text.isEmpty) return newValue.copyWith(text: '');
+    // 1. Eğer alan tamamen boşaltıldıysa
+    if (newValue.text.isEmpty) {
+      return newValue.copyWith(text: '');
+    }
 
-    // remove existing dots
-    String text = newValue.text.replaceAll('.', '');
+    // 2. Sadece rakam ve virgül girişine izin ver, noktaları (binlikleri) temizle
+    String newText = newValue.text.replaceAll('.', '');
 
-    // Only allow digits and a single comma (max 2 decimal places)
-    final regExp = RegExp(r'^\d*,?\d{0,2}$');
-    if (!regExp.hasMatch(text)) return oldValue;
+    // Birden fazla virgüle veya geçersiz karaktere izin verme
+    if (RegExp(r'[^0-9,]').hasMatch(newText) ||
+        ','.allMatches(newText).length > 1) {
+      return oldValue;
+    }
 
-    // Split integer and decimal parts
-    List<String> parts = text.split(',');
+    // 3. Tam ve Ondalık kısımları ayır
+    List<String> parts = newText.split(',');
     String integerPart = parts[0];
-    String decimalPart = parts.length > 1 ? parts[1] : "";
+    String? decimalPart = parts.length > 1 ? parts[1] : null;
 
-    // Format integer part with thousand separators
+    // 4. Tam kısmı binlik ayırıcılarla formatla (intl kullanarak)
     final formatter = NumberFormat('#,###', 'tr_TR');
     String formattedInteger = '';
-
     if (integerPart.isNotEmpty) {
+      // Sayı çok büyükse int parse hatasını önlemek için (Limitim için yeterli)
       formattedInteger = formatter.format(int.parse(integerPart));
-    } else if (text.startsWith(',')) {
-      // Handle case where user starts with a comma
-      formattedInteger = '0';
     }
 
-    // Create final text (If comma pressed, add comma and decimal part if any)
-    String finalString = formattedInteger;
-    if (text.contains(',')) {
-      finalString += ',$decimalPart';
+    // 5. Nihai stringi oluştur
+    String resultText = formattedInteger;
+    if (newText.contains(',')) {
+      // Kuruş hanesini 2 ile sınırla
+      resultText +=
+          ',${decimalPart!.substring(0, decimalPart.length > 2 ? 2 : decimalPart.length)}';
     }
 
-    return newValue.copyWith(
-      text: finalString,
-      selection: TextSelection.collapsed(offset: finalString.length),
+    // 6. İmleç konumunu ayarla (Sayı büyüdükçe imlecin sonda kalmasını sağlar)
+    return TextEditingValue(
+      text: resultText,
+      selection: TextSelection.collapsed(offset: resultText.length),
     );
   }
 }

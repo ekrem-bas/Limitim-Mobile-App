@@ -20,7 +20,7 @@ class _SetLimitSheetState extends State<SetLimitSheet> {
 
   final String _invalidLimitError = "Lütfen geçerli bir limit girin";
   final String _limitLabelText = "Aylık Limit";
-  final String _limitHintText = "Örn: 5000";
+  final String _limitHintText = "Örn: 5.000,00";
   final String _currencySuffix = "₺";
   String get _title => _isEditing ? "Limiti Güncelle" : "Yeni Limit Belirle";
   String get _description => _isEditing
@@ -53,7 +53,6 @@ class _SetLimitSheetState extends State<SetLimitSheet> {
         _limitError = _invalidLimitError;
       });
     } else {
-      
       if (_isEditing) {
         context.read<SessionBloc>().add(UpdateSessionLimit(limit));
       } else {
@@ -119,7 +118,7 @@ class _SetLimitSheetState extends State<SetLimitSheet> {
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       inputFormatters: [
         // Convert comma to dot immediately
-        FilteringTextInputFormatter.allow(RegExp(r'[\d,]')),
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9,.]')),
         CurrencyFormatter(), // Yazarken noktaları/virgülleri koy
       ],
       decoration: InputDecoration(

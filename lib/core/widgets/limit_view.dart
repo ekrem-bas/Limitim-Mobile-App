@@ -40,7 +40,7 @@ class LimitView extends StatelessWidget {
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      CurrencyHelper.format(limit - totalExpense),
+                      "${CurrencyHelper.format(limit - totalExpense)} ₺",
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color:
@@ -86,7 +86,7 @@ class LimitView extends StatelessWidget {
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerRight,
                     child: Text(
-                      CurrencyHelper.format(totalExpense),
+                      "${CurrencyHelper.format(totalExpense)} ₺",
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color:

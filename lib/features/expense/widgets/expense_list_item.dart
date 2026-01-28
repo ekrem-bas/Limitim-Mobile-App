@@ -42,7 +42,7 @@ class ExpenseListItem extends StatelessWidget {
           style: Theme.of(context).textTheme.bodySmall,
         ),
         trailing: Text(
-          CurrencyHelper.format(expense.amount),
+          "${CurrencyHelper.format(expense.amount)} ₺",
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: Theme.of(context).colorScheme.onSurface,

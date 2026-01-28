@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:limitim/core/utils/currency_helper.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 import 'package:limitim/features/expense/models/expense.dart';
 
@@ -33,7 +34,7 @@ class _UpdateExpenseSheetState extends State<UpdateExpenseSheet> {
     // set initial values from the expense to be updated
     _titleController = TextEditingController(text: widget.expense.title);
     _amountController = TextEditingController(
-      text: widget.expense.amount.toStringAsFixed(2).replaceAll('.', ','),
+      text: CurrencyHelper.format(widget.expense.amount),
     );
   }
 

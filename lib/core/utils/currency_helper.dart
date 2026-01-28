@@ -5,7 +5,7 @@ class CurrencyHelper {
     // show currency with 2 decimal places
     return NumberFormat.currency(
       locale: 'tr_TR',
-      symbol: '₺',
+      symbol: '',
       decimalDigits: 2,
     ).format(value);
   }
