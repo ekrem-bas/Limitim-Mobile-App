@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:limitim/core/utils/currency_formatter.dart';
+import 'package:limitim/core/widgets/amount_text_field.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 
 class AddExpenseSheet extends StatefulWidget {
@@ -23,19 +22,22 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   final String _amountHintText = "Örn: 1.250,50";
 
   final _titleController = TextEditingController();
-  final _amountController = TextEditingController();
   String? _titleError;
   String? _amountError;
+  double? _currentAmount;
+
+  final FocusNode _amountFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _amountFocusNode.dispose();
+    _titleController.dispose();
+    super.dispose();
+  }
 
   void _submit() {
     final title = _titleController.text.trim();
-    final amountText = _amountController.text
-        .replaceAll('.', '') // Binlik ayırıcı noktaları kaldır
-        .replaceAll(
-          ',',
-          '.',
-        ); // Ondalık virgülü noktaya çevir (Dart double için nokta ister)
-    final amount = double.tryParse(amountText);
+    final amount = _currentAmount;
 
     setState(() {
       _titleError = title.isEmpty ? _titleErrorText : null;
@@ -88,6 +90,10 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         errorText: _titleError,
         border: const OutlineInputBorder(),
       ),
+      textInputAction: TextInputAction.next,
+      onSubmitted: (value) {
+        FocusScope.of(context).requestFocus(_amountFocusNode);
+      },
     );
   }
 
@@ -98,22 +104,16 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     );
   }
 
-  TextField _amountTextField() {
-    return TextField(
-      controller: _amountController,
-      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      inputFormatters: [
-        // Convert comma to dot immediately
-        FilteringTextInputFormatter.allow(RegExp(r'[0-9,.]')),
-        CurrencyFormatter(), // Yazarken noktaları/virgülleri koy
-      ],
-      decoration: InputDecoration(
-        labelText: _amountLabelText,
-        suffixText: _amountCurrencySuffix,
-        errorText: _amountError,
-        border: const OutlineInputBorder(),
-        hintText: _amountHintText,
-      ),
+  Widget _amountTextField() {
+    return AmountTextField(
+      focusNode: _amountFocusNode,
+      amountTextLabel: _amountLabelText,
+      amountCurrencySuffix: _amountCurrencySuffix,
+      amountErrorText: _amountError,
+      amountHintText: _amountHintText,
+      onAmountChanged: (value) {
+        _currentAmount = value;
+      },
     );
   }
 

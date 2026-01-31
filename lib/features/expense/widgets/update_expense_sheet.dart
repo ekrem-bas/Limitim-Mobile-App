@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:limitim/core/utils/currency_helper.dart';
+import 'package:limitim/core/widgets/amount_text_field.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 import 'package:limitim/features/expense/models/expense.dart';
 
@@ -24,7 +24,9 @@ class _UpdateExpenseSheetState extends State<UpdateExpenseSheet> {
   final String _amountErrorText = "Geçerli bir tutar girin";
 
   late final TextEditingController _titleController;
-  late final TextEditingController _amountController;
+  final ScrollController _titleScrollController = ScrollController();
+  final FocusNode _amountFocusNode = FocusNode();
+  double? _currentAmount;
   String? _titleError;
   String? _amountError;
 
@@ -33,15 +35,29 @@ class _UpdateExpenseSheetState extends State<UpdateExpenseSheet> {
     super.initState();
     // set initial values from the expense to be updated
     _titleController = TextEditingController(text: widget.expense.title);
-    _amountController = TextEditingController(
-      text: CurrencyHelper.format(widget.expense.amount),
-    );
+    _currentAmount = widget.expense.amount;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_titleScrollController.hasClients) {
+        // maxScrollExtent: Metnin bittiği en son piksel noktası
+        _titleScrollController.jumpTo(
+          _titleScrollController.position.maxScrollExtent,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _titleController.dispose();
+    _titleScrollController.dispose();
+    _amountFocusNode.dispose();
   }
 
   void _submit() {
     final title = _titleController.text.trim();
-    final amountText = _amountController.text.replaceAll(',', '.');
-    final amount = double.tryParse(amountText);
+    final amount = _currentAmount;
 
     setState(() {
       _titleError = title.isEmpty ? _titleErrorText : null;
@@ -82,30 +98,36 @@ class _UpdateExpenseSheetState extends State<UpdateExpenseSheet> {
 
           TextField(
             controller: _titleController,
+            scrollController: _titleScrollController,
+            minLines: 1,
+            maxLines: 3,
             decoration: InputDecoration(
               labelText: _titleHintText,
               errorText: _titleError,
               border: const OutlineInputBorder(),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 16,
+              ),
             ),
+            textInputAction: TextInputAction.next,
+            onSubmitted: (value) {
+              FocusScope.of(context).requestFocus(_amountFocusNode);
+            },
           ),
 
           const SizedBox(height: 16),
 
-          TextField(
-            controller: _amountController,
-            onTap: () {
-              _amountController.selection = TextSelection(
-                baseOffset: 0,
-                extentOffset: _amountController.text.length,
-              );
+          AmountTextField(
+            focusNode: _amountFocusNode,
+            initialAmount: widget.expense.amount, // Mevcut değeri gönderdik
+            amountTextLabel: _amountLabelText,
+            amountCurrencySuffix: _amountCurrencySuffix,
+            amountErrorText: _amountError,
+            amountHintText: "0,00",
+            onAmountChanged: (value) {
+              _currentAmount = value; // Widget değiştikçe bu güncellenir
             },
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            decoration: InputDecoration(
-              labelText: _amountLabelText,
-              suffixText: _amountCurrencySuffix,
-              errorText: _amountError,
-              border: const OutlineInputBorder(),
-            ),
           ),
 
           const SizedBox(height: 24),
@@ -153,12 +175,5 @@ class _UpdateExpenseSheetState extends State<UpdateExpenseSheet> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _amountController.dispose();
-    super.dispose();
   }
 }

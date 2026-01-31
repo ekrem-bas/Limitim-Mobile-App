@@ -173,6 +173,7 @@ class CalendarScreen extends StatelessWidget {
       itemBuilder: (context, index) {
         return ExpenseListItem(expense: expenses[index], isReadOnly: true);
       },
+      physics: const BouncingScrollPhysics(),
     );
   }
 }

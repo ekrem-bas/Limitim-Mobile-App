@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:limitim/core/utils/currency_helper.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 import 'package:limitim/features/expense/cubit/expense_detail_cubit.dart';
@@ -35,11 +36,15 @@ class ExpenseListItem extends StatelessWidget {
         onTap: () => _showDetailSheet(context),
         title: Text(
           expense.title,
-          style: const TextStyle(fontWeight: FontWeight.w500),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
         subtitle: Text(
-          "${expense.date.day}/${expense.date.month}/${expense.date.year}",
-          style: Theme.of(context).textTheme.bodySmall,
+          DateFormat('dd/MM/yyyy').format(expense.date),
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
         trailing: Text(
           "${CurrencyHelper.format(expense.amount)} ₺",

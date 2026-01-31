@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:limitim/core/utils/currency_formatter.dart';
+import 'package:limitim/core/utils/integer_currency_formatter.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 
 class SetLimitSheet extends StatefulWidget {
@@ -119,7 +119,7 @@ class _SetLimitSheetState extends State<SetLimitSheet> {
       inputFormatters: [
         // Convert comma to dot immediately
         FilteringTextInputFormatter.allow(RegExp(r'[0-9,.]')),
-        CurrencyFormatter(), // Yazarken noktaları/virgülleri koy
+        IntegerCurrencyFormatter(), // Yazarken noktaları/virgülleri koy
       ],
       decoration: InputDecoration(
         labelText: _limitLabelText,

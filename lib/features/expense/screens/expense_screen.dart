@@ -130,8 +130,16 @@ class ExpenseScreen extends StatelessWidget {
             ).colorScheme.onSurface.withValues(alpha: 0.6),
           ),
           const SizedBox(height: 16),
-          Text(_emptyStateText, style: Theme.of(context).textTheme.titleLarge),
-          Text(_emptyStateHintText),
+          Text(
+            textAlign: TextAlign.center,
+            _emptyStateText,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          Text(
+            textAlign: TextAlign.center,
+            _emptyStateHintText,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
         ],
       ),
     );
