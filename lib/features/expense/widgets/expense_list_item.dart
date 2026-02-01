@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:limitim/core/utils/currency_helper.dart';
+import 'package:limitim/core/extensions/snack_bar_extension.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 import 'package:limitim/features/expense/cubit/expense_detail_cubit.dart';
 import 'package:limitim/features/expense/models/expense.dart';
@@ -28,9 +29,9 @@ class ExpenseListItem extends StatelessWidget {
           : DismissDirection.endToStart,
       onDismissed: (direction) {
         context.read<SessionBloc>().add(DeleteExpenseEvent(expense.id));
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('${expense.title} silindi')));
+        context.showImmediateSnackBar(
+          SnackBar(content: Text('${expense.title} silindi')),
+        );
       },
       child: InkWell(
         onTap: () => _showDetailSheet(context),

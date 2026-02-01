@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:limitim/core/theme/cubit/text_scale_cubit.dart';
+import 'package:limitim/core/extensions/snack_bar_extension.dart';
 import 'package:limitim/features/calendar/cubit/calendar_cubit.dart';
 import 'package:limitim/features/calendar/screens/calendar_screen.dart';
 import 'package:limitim/features/history/bloc/history_bloc.dart';
@@ -22,6 +23,8 @@ class _RootPageState extends State<RootPage> {
 
   // page index
   int _currentIndex = 0;
+  // last back press time
+  DateTime? _lastPressedAt;
 
   // list of pages
   final List<Widget> pages = [
@@ -86,15 +89,45 @@ class _RootPageState extends State<RootPage> {
         ),
       ],
       child: PopScope(
-        canPop: false,
+        canPop: false, // disable default back button behavior
         onPopInvokedWithResult: (didPop, result) async {
-          // if already popped, do nothing
           if (didPop) return;
-          try {
-            // trigger moving app to background
-            await platform.invokeMethod('sendToBackground');
-          } on PlatformException catch (e) {
-            debugPrint("Failed to invoke method: '${e.message}'.");
+
+          // 1. if we are not on home page, navigate to home page
+          if (_currentIndex != 0) {
+            _onItemTapped(0);
+          }
+          // 2. if we are on home page, handle double back press to send app to background
+          else {
+            final now = DateTime.now();
+            final backButtonHasNotBeenPressedRecently =
+                _lastPressedAt == null ||
+                now.difference(_lastPressedAt!) > const Duration(seconds: 2);
+
+            if (backButtonHasNotBeenPressedRecently) {
+              // first back press, show toast
+              _lastPressedAt = now;
+
+              context.showImmediateSnackBar(
+                const SnackBar(
+                  content: Text(
+                    'Çıkmak için tekrar geri basın',
+                    textAlign: TextAlign.center,
+                  ),
+                  duration: Duration(seconds: 2),
+                  behavior: SnackBarBehavior.floating,
+                  width:
+                      250, // set a fixed width to avoid stretching on wide screens
+                ),
+              );
+            } else {
+              // if back button pressed again within 2 seconds, send app to background
+              try {
+                await platform.invokeMethod('sendToBackground');
+              } on PlatformException catch (e) {
+                debugPrint("Failed to invoke method: '${e.message}'.");
+              }
+            }
           }
         },
         child: Scaffold(

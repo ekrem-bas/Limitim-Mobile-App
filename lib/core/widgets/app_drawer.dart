@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:limitim/core/theme/cubit/text_scale_cubit.dart';
 import 'package:limitim/core/theme/cubit/theme_cubit.dart';
+import 'package:limitim/core/extensions/snack_bar_extension.dart';
 import 'package:limitim/features/calendar/cubit/calendar_cubit.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 import 'package:limitim/features/history/bloc/history_bloc.dart';
@@ -344,7 +345,7 @@ class _AppDrawerState extends State<AppDrawer> {
         context.read<CalendarCubit>().loadMonth(DateTime.now());
 
         // show information message
-        ScaffoldMessenger.of(context).showSnackBar(
+        context.showImmediateSnackBar(
           SnackBar(
             content: Text(_snackbarText),
             behavior: SnackBarBehavior.floating,
