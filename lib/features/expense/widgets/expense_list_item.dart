@@ -32,25 +32,70 @@ class ExpenseListItem extends StatelessWidget {
           context,
         ).showSnackBar(SnackBar(content: Text('${expense.title} silindi')));
       },
-      child: ListTile(
+      child: InkWell(
         onTap: () => _showDetailSheet(context),
-        title: Text(
-          expense.title,
-          style: Theme.of(
-            context,
-          ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-        subtitle: Text(
-          DateFormat('dd/MM/yyyy').format(expense.date),
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        trailing: Text(
-          "${CurrencyHelper.format(expense.amount)} ₺",
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.onSurface,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 1. expense title
+              Text(
+                expense.title,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+
+              const SizedBox(height: 12),
+
+              // 2. expense amount
+              Align(
+                alignment: Alignment.centerRight,
+                child: Row(
+                  children: [
+                    Text(
+                      "Tutar: ",
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      "${CurrencyHelper.format(expense.amount)} ₺",
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const Divider(height: 24),
+
+              // 3. expense date
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Icon(
+                    Icons.calendar_today,
+                    size: 14,
+                    color: Colors.grey,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    DateFormat('dd/MM/yyyy').format(expense.date),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Colors.grey[600],
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const Spacer(), // push time to the right
+                ],
+              ),
+            ],
           ),
         ),
       ),
