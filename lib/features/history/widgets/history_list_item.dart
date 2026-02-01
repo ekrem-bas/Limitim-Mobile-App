@@ -11,9 +11,10 @@ class HistoryListItem extends StatelessWidget {
   final Month month;
   const HistoryListItem({super.key, required this.month});
 
-  final String _limitTextPrefix = "Limit: ";
-  final String _totalExpenseTextPrefix = "Toplam Harcama: ";
-  final String _remainingLimitTextPrefix = "Kalan Limit: ";
+  final String _limitTextPrefix = "Limit";
+  final String _totalExpenseTextPrefix = "Toplam Harcama";
+  final String _remainingLimitTextPrefix = "Kalan Limit";
+
   @override
   Widget build(BuildContext context) {
     return DismissibleCard(
@@ -21,39 +22,7 @@ class HistoryListItem extends StatelessWidget {
       onDismissed: (_) {
         context.read<HistoryBloc>().add(DeleteHistoryMonthEvent(month.id));
       },
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: Theme.of(context).colorScheme.secondary,
-          child: Icon(Icons.calendar_month, color: Colors.white),
-        ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              month.displayTitle,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("$_limitTextPrefix${CurrencyHelper.format(month.limit)} ₺"),
-            Text(
-              "$_totalExpenseTextPrefix${CurrencyHelper.format(month.totalSpent)} ₺",
-              style: TextStyle(
-                color: Theme.of(context).extension<AppColors>()?.expenseColor,
-              ),
-            ),
-            Text(
-              "$_remainingLimitTextPrefix${CurrencyHelper.format(month.limit - month.totalSpent)} ₺",
-              style: TextStyle(
-                color: Theme.of(context).extension<AppColors>()?.limitColor,
-              ),
-            ),
-          ],
-        ),
-        trailing: const Icon(Icons.chevron_right),
+      child: InkWell(
         onTap: () {
           Navigator.push(
             context,
@@ -62,7 +31,108 @@ class HistoryListItem extends StatelessWidget {
             ),
           );
         },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 1. title and icon
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 18,
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.secondary.withValues(alpha: 0.1),
+                    child: Icon(
+                      Icons.calendar_month,
+                      size: 20,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      month.displayTitle,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const Icon(Icons.chevron_right, color: Colors.grey),
+                ],
+              ),
+
+              const SizedBox(height: 20),
+
+              // 2. data sections
+              _buildDataSection(
+                context,
+                label: _limitTextPrefix,
+                value: CurrencyHelper.format(month.limit),
+              ),
+              const Divider(height: 24), // Seperator
+
+              _buildDataSection(
+                context,
+                label: _totalExpenseTextPrefix,
+                value: CurrencyHelper.format(month.totalSpent),
+                valueColor: Theme.of(
+                  context,
+                ).extension<AppColors>()?.expenseColor,
+              ),
+              const Divider(height: 24), // Seperator
+
+              _buildDataSection(
+                context,
+                label: _remainingLimitTextPrefix,
+                value: CurrencyHelper.format(month.limit - month.totalSpent),
+                valueColor: Theme.of(
+                  context,
+                ).extension<AppColors>()?.limitColor,
+                isBold: true,
+              ),
+            ],
+          ),
+        ),
       ),
+    );
+  }
+
+  Widget _buildDataSection(
+    BuildContext context, {
+    required String label,
+    required String value,
+    Color? valueColor,
+    bool isBold = false,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: Colors.grey[600],
+            letterSpacing: 1.1,
+          ),
+        ),
+        const SizedBox(height: 4),
+        // value below
+        SizedBox(
+          width: double.infinity,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "$value ₺",
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: isBold ? FontWeight.w900 : FontWeight.w600,
+                color: valueColor,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

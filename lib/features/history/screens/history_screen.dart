@@ -15,6 +15,7 @@ class HistoryScreen extends StatelessWidget {
     return Scaffold(
       drawer: const AppDrawer(),
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         title: Text(
           _appBarTitleText,
           style: const TextStyle(fontWeight: FontWeight.bold),

@@ -155,12 +155,18 @@ class ExpenseDetailSheet extends StatelessWidget {
         Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
         const SizedBox(width: 12),
         Text(label, style: Theme.of(context).textTheme.bodyLarge),
-        const Spacer(),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
-            color: isBold ? Theme.of(context).colorScheme.error : null,
+        const SizedBox(width: 12),
+        Expanded(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerRight,
+            child: Text(
+              value,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
+                color: isBold ? Theme.of(context).colorScheme.error : null,
+              ),
+            ),
           ),
         ),
       ],
