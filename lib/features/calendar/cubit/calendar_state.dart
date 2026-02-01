@@ -38,13 +38,25 @@ final class CalendarLoaded extends CalendarState {
     );
   }
 
-  // get expenses for focused month
+  // get expenses for the selected day or focused month (with previous, current, next month data)
   List<Expense> get visibleExpenses {
-    final filtered = selectedDay == null
-        ? allMonthExpenses
-        : allMonthExpenses
-              .where((e) => isSameDay(e.date, selectedDay!))
-              .toList();
+    List<Expense> filtered;
+
+    if (selectedDay == null) {
+      // if there is no selected day, get focused month's expenses
+      filtered = allMonthExpenses
+          .where(
+            (e) =>
+                e.date.month == focusedMonth.month &&
+                e.date.year == focusedMonth.year,
+          )
+          .toList();
+    } else {
+      // if there is day selected, get that day expenses (even that day is not in focused month)
+      filtered = allMonthExpenses
+          .where((e) => isSameDay(e.date, selectedDay!))
+          .toList();
+    }
 
     // sort by date descending
     return filtered..sort((a, b) => b.date.compareTo(a.date));
@@ -66,6 +78,17 @@ final class CalendarLoaded extends CalendarState {
   }
 
   bool get isEmptySelectedDay => selectedDay != null && visibleExpenses.isEmpty;
+
+  bool get isFocusedMonthEmpty {
+    // check if there is any expense in the focused month
+    return allMonthExpenses
+        .where(
+          (e) =>
+              e.date.month == focusedMonth.month &&
+              e.date.year == focusedMonth.year,
+        )
+        .isEmpty;
+  }
 }
 
 final class CalendarError extends CalendarState {

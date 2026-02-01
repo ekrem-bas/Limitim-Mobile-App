@@ -135,36 +135,13 @@ class CalendarScreen extends StatelessWidget {
     final expenses = state.visibleExpenses;
     final String noExpensesOnSelectedDay = "Bu günde harcama bulunmuyor";
     final String noExpensesInMonth = "Bu ayda harcama bulunmuyor";
+
     if (state.isEmptySelectedDay) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.event_busy, size: 64, color: Colors.grey[400]),
-            const SizedBox(height: 16),
-            Text(
-              noExpensesOnSelectedDay,
-              style: TextStyle(color: Colors.grey, fontSize: 16),
-            ),
-          ],
-        ),
-      );
+      return _buildNoExpenseInDay(noExpensesOnSelectedDay);
     }
 
-    if (state.allMonthExpenses.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.event_busy, size: 64, color: Colors.grey[400]),
-            const SizedBox(height: 16),
-            Text(
-              noExpensesInMonth,
-              style: TextStyle(color: Colors.grey, fontSize: 16),
-            ),
-          ],
-        ),
-      );
+    if (state.selectedDay == null && state.isFocusedMonthEmpty) {
+      return _buildNoExpenseInMonth(noExpensesInMonth);
     }
 
     return ListView.builder(
@@ -174,6 +151,38 @@ class CalendarScreen extends StatelessWidget {
         return ExpenseListItem(expense: expenses[index], isReadOnly: true);
       },
       physics: const BouncingScrollPhysics(),
+    );
+  }
+
+  Widget _buildNoExpenseInMonth(String noExpensesInMonth) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.event_busy, size: 64, color: Colors.grey[400]),
+          const SizedBox(height: 16),
+          Text(
+            noExpensesInMonth,
+            style: TextStyle(color: Colors.grey, fontSize: 16),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNoExpenseInDay(String noExpensesOnSelectedDay) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.event_busy, size: 64, color: Colors.grey[400]),
+          const SizedBox(height: 16),
+          Text(
+            noExpensesOnSelectedDay,
+            style: TextStyle(color: Colors.grey, fontSize: 16),
+          ),
+        ],
+      ),
     );
   }
 }

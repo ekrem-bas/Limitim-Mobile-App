@@ -11,15 +11,35 @@ class CalendarCubit extends Cubit<CalendarState> {
   CalendarCubit(this.repository) : super(CalendarInitial());
 
   // load expenses for the focused month (first load or month change)
+  // but to ensure visibility when switching months, we load 3 months of data:
+  // previous month, current month, next month
   void loadMonth(DateTime month) async {
     emit(CalendarLoading());
     try {
-      final expenses = repository.getExpensesByMonths(month);
+      // to ensure visibility when switching months, we load 3 months of data:
+      // current month, previous month, and next month
+      final currentMonthExpenses = repository.getExpensesByMonths(month);
+
+      // calculate previous month
+      final prevMonth = DateTime(month.year, month.month - 1);
+      final prevMonthExpenses = repository.getExpensesByMonths(prevMonth);
+
+      // calculate next month
+      final nextMonth = DateTime(month.year, month.month + 1);
+      final nextMonthExpenses = repository.getExpensesByMonths(nextMonth);
+
+      // combine all lists
+      final allVisibleExpenses = [
+        ...prevMonthExpenses,
+        ...currentMonthExpenses,
+        ...nextMonthExpenses,
+      ];
+
       emit(
         CalendarLoaded(
           focusedMonth: month,
-          allMonthExpenses: expenses,
-          selectedDay: null, // no day selected initially
+          allMonthExpenses: allVisibleExpenses,
+          selectedDay: null,
         ),
       );
     } catch (e) {
