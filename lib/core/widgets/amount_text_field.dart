@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:limitim/core/utils/decimal_currency_formatter.dart';
 import 'package:limitim/core/utils/integer_currency_formatter.dart';
@@ -54,6 +53,15 @@ class _AmountTextFieldState extends State<AmountTextField> {
     // to change border color on focus
     _intFocusNode.addListener(() => setState(() {}));
     _decimalFocusNode.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _intController.dispose();
+    _decimalController.dispose();
+    _intFocusNode.dispose();
+    _decimalFocusNode.dispose();
+    super.dispose();
   }
 
   void _setupInitialValue() {

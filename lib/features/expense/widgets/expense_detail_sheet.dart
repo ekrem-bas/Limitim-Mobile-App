@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:limitim/core/theme/cubit/text_scale_cubit.dart';
 import 'package:limitim/core/utils/currency_helper.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 import 'package:limitim/features/expense/cubit/expense_detail_cubit.dart';
@@ -18,60 +19,34 @@ class ExpenseDetailSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-      initialChildSize: 0.6, // Başlangıçta ekranın %60'ını kaplasın
-      minChildSize: 0.4, // En az %40'a kadar küçülsün
-      maxChildSize: 0.9, // En fazla %90'a kadar çıksın
-      expand: false,
-      builder: (context, scrollController) {
-        return Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-          ),
-          child: SingleChildScrollView(
-            controller: scrollController,
-            child: Padding(
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return Container(
+      // prevent the sheet from exceeding 95% of screen height
+      constraints: BoxConstraints(maxHeight: screenHeight * 0.95),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // when content is too long, make it scrollable
+          Flexible(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: [
-                  // 1. Drag handle
-                  const SizedBox(height: 12),
-                  _buildDragHandle(context),
-                  const SizedBox(height: 24),
-
-                  // 2. icon and title
                   _buildHeader(context),
                   const SizedBox(height: 32),
-
-                  // 3. detail info
                   _buildDetailInfo(context),
                   const SizedBox(height: 40),
-
-                  // 4. action buttons
                   if (!isReadOnly) ...[
                     _buildActionButtons(context),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 24),
                   ],
                 ],
               ),
             ),
           ),
-        );
-      },
-    );
-  }
-
-  Widget _buildDragHandle(BuildContext context) {
-    return Container(
-      width: 40,
-      height: 4,
-      decoration: BoxDecoration(
-        color: Theme.of(
-          context,
-        ).colorScheme.onSurfaceVariant.withValues(alpha: .4),
-        borderRadius: BorderRadius.circular(2),
+        ],
       ),
     );
   }
@@ -116,6 +91,20 @@ class ExpenseDetailSheet extends StatelessWidget {
     const String currencyLabel = "₺";
     const String dateLabel = "Tarih";
     const String hourLabel = "Saat";
+
+    // check current text scale
+    final double currentScale = context.watch<TextScaleCubit>().state;
+
+    // if the scale is larger than 1.2, consider it as large font
+    final bool isLargeFont = currentScale > 1.2;
+
+    final String dateText = DateFormat('dd/MM/yyyy').format(expense.date);
+    final String dayName = DateFormat('EEEE', 'tr_TR').format(expense.date);
+
+    final String dateValue = isLargeFont
+        ? "$dateText\n$dayName"
+        : "$dateText $dayName";
+
     return Column(
       children: [
         _infoTile(
@@ -130,7 +119,8 @@ class ExpenseDetailSheet extends StatelessWidget {
           context,
           Icons.calendar_today_outlined,
           dateLabel,
-          DateFormat('dd/MM/yyyy').format(expense.date),
+          dateValue,
+          isMultiline: isLargeFont,
         ),
         const Divider(height: 32),
         _infoTile(
@@ -149,10 +139,22 @@ class ExpenseDetailSheet extends StatelessWidget {
     String label,
     String value, {
     bool isBold = false,
+    bool isMultiline = false,
   }) {
     return Row(
+      // if multiline, align to start
+      crossAxisAlignment: isMultiline
+          ? CrossAxisAlignment.start
+          : CrossAxisAlignment.center,
       children: [
-        Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
+        Padding(
+          padding: EdgeInsets.only(top: isMultiline ? 4 : 0),
+          child: Icon(
+            icon,
+            size: 20,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
         const SizedBox(width: 12),
         Text(label, style: Theme.of(context).textTheme.bodyLarge),
         const SizedBox(width: 12),
@@ -162,9 +164,11 @@ class ExpenseDetailSheet extends StatelessWidget {
             alignment: Alignment.centerRight,
             child: Text(
               value,
+              textAlign: TextAlign.end,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
                 color: isBold ? Theme.of(context).colorScheme.error : null,
+                height: 1.3,
               ),
             ),
           ),
@@ -218,8 +222,9 @@ class ExpenseDetailSheet extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      showDragHandle: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) => UpdateExpenseSheet(expense: expense),
     );

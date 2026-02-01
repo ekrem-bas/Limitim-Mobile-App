@@ -52,7 +52,6 @@ class _UpdateExpenseSheetState extends State<UpdateExpenseSheet> {
     super.dispose();
     _titleController.dispose();
     _titleScrollController.dispose();
-    _amountFocusNode.dispose();
   }
 
   void _submit() {
@@ -85,7 +84,6 @@ class _UpdateExpenseSheetState extends State<UpdateExpenseSheet> {
         bottom: MediaQuery.of(context).viewInsets.bottom + 20,
         left: 20,
         right: 20,
-        top: 20,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

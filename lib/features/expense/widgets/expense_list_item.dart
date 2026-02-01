@@ -92,7 +92,7 @@ class ExpenseListItem extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    DateFormat('dd/MM/yyyy').format(expense.date),
+                    DateFormat('dd/MM/yyyy EEEE', 'tr_TR').format(expense.date),
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Colors.grey[600],
                       letterSpacing: 0.5,
@@ -112,7 +112,10 @@ class ExpenseListItem extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      showDragHandle: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (sheetContext) => isReadOnly
           // if it is readOnly, show the sheet without BlocProvider (do not need to manage state)
           ? ExpenseDetailSheet(expense: expense, isReadOnly: true)

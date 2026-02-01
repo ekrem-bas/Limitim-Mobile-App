@@ -152,7 +152,7 @@ class ExpenseScreen extends StatelessWidget {
       isScrollControlled: true, // required for keyboard to push the sheet up
       backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) => SetLimitSheet(initialLimit: initialLimit),
     );
@@ -161,6 +161,7 @@ class ExpenseScreen extends StatelessWidget {
   void _showAddExpense(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      showDragHandle: true,
       isScrollControlled: true, // required for keyboard to push the sheet up
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -171,9 +172,13 @@ class ExpenseScreen extends StatelessWidget {
 
   void _showFinalizeSheet(BuildContext context) {
     showModalBottomSheet(
+      showDragHandle: true,
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (context) => const SaveExpensesSheet(),
     );
   }
@@ -188,12 +193,31 @@ class ExpenseScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: Text(dialogTitle),
-        content: Text(deleteSessionTooltip),
+        title: Text(
+          dialogTitle,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
+          ),
+        ),
+        content: Text(
+          deleteSessionTooltip,
+          style: TextStyle(
+            fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.7),
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: Text(cancelButtonText),
+            child: Text(
+              cancelButtonText,
+              style: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
+              ),
+            ),
           ),
           TextButton(
             onPressed: () {
@@ -202,7 +226,8 @@ class ExpenseScreen extends StatelessWidget {
             },
             child: Text(
               confirmButtonText,
-              style: const TextStyle(
+              style: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
                 color: Colors.red,
                 fontWeight: FontWeight.bold,
               ),

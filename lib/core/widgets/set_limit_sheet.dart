@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:limitim/core/utils/currency_helper.dart';
 import 'package:limitim/core/utils/integer_currency_formatter.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 
@@ -32,19 +33,26 @@ class _SetLimitSheetState extends State<SetLimitSheet> {
   @override
   void initState() {
     super.initState();
-    if (_isEditing) {
-      _limitController.text = widget.initialLimit.toString();
+    if (_isEditing && widget.initialLimit != null) {
+      // convert initial limit to formatted string
+      final String formatted = CurrencyHelper.format(widget.initialLimit!);
+
+      // set the formatted string to the controller
+      _limitController.text = formatted;
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _limitController.dispose();
+  }
+
   void _submit() {
-    // 1. Görsel formatı temizle: Noktaları sil, virgülü noktaya çevir
+    // parse the limit from the text field
     final cleanText = _limitController.text
-        .replaceAll('.', '') // Binlik ayırıcı noktaları kaldır
-        .replaceAll(
-          ',',
-          '.',
-        ); // Ondalık virgülü noktaya çevir (Dart double için nokta ister)
+        .replaceAll('.', '') // remove thousand separators
+        .replaceAll(',', '.'); // replace decimal comma with dot
 
     final limit = double.tryParse(cleanText);
 
@@ -119,7 +127,7 @@ class _SetLimitSheetState extends State<SetLimitSheet> {
       inputFormatters: [
         // Convert comma to dot immediately
         FilteringTextInputFormatter.allow(RegExp(r'[0-9,.]')),
-        IntegerCurrencyFormatter(), // Yazarken noktaları/virgülleri koy
+        IntegerCurrencyFormatter(), // add thousand separators
       ],
       decoration: InputDecoration(
         labelText: _limitLabelText,

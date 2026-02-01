@@ -71,6 +71,7 @@ class HistoryScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
+            textAlign: TextAlign.center,
             _emptyHistoryText,
             style: Theme.of(context).textTheme.titleLarge,
           ),

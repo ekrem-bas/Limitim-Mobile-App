@@ -30,7 +30,6 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
 
   @override
   void dispose() {
-    _amountFocusNode.dispose();
     _titleController.dispose();
     super.dispose();
   }
@@ -59,7 +58,6 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
         bottom: MediaQuery.of(context).viewInsets.bottom + 20,
         left: 20,
         right: 20,
-        top: 20,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
