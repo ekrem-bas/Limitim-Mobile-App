@@ -98,7 +98,7 @@ class ExpenseDetailSheet extends StatelessWidget {
     // if the scale is larger than 1.2, consider it as large font
     final bool isLargeFont = currentScale > 1.2;
 
-    final String dateText = DateFormat('dd/MM/yyyy').format(expense.date);
+    final String dateText = DateFormat('dd.MM.yyyy').format(expense.date);
     final String dayName = DateFormat('EEEE', 'tr_TR').format(expense.date);
 
     final String dateValue = isLargeFont

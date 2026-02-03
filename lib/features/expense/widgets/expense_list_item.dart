@@ -93,7 +93,7 @@ class ExpenseListItem extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    DateFormat('dd/MM/yyyy EEEE', 'tr_TR').format(expense.date),
+                    DateFormat('dd.MM.yyyy EEEE', 'tr_TR').format(expense.date),
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Colors.grey[600],
                       letterSpacing: 0.5,
