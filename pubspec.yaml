@@ -43,6 +43,9 @@ dependencies:
   intl: ^0.20.2
   table_calendar: ^3.2.0
   hydrated_bloc: ^10.1.1
+  file_picker: ^10.3.10
+  pdf: ^3.11.3
+  printing: ^5.14.2
 
 dev_dependencies:
   flutter_test:

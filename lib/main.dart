@@ -7,6 +7,7 @@ import 'package:limitim/core/splash/splash_screen.dart';
 import 'package:limitim/core/theme/cubit/text_scale_cubit.dart';
 import 'package:limitim/core/theme/cubit/theme_cubit.dart';
 import 'package:limitim/features/calendar/cubit/calendar_cubit.dart';
+import 'package:limitim/features/export_csv/cubit/export_pdf_cubit.dart';
 import 'package:limitim/features/history/bloc/history_bloc.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 import 'package:limitim/core/theme/app_theme.dart';
@@ -52,6 +53,7 @@ Future<void> main() async {
           BlocProvider(create: (context) => ThemeCubit()),
           BlocProvider(create: (context) => TextScaleCubit()),
           BlocProvider(create: (context) => OnboardingCubit()),
+          BlocProvider(create: (context) => ExportPdfCubit()),
         ],
         child: const MyApp(),
       ),
