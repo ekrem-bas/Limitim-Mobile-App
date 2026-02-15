@@ -15,6 +15,7 @@ class CalendarCubit extends Cubit<CalendarState> {
   // previous month, current month, next month
   void loadMonth(DateTime month) async {
     final currentState = state;
+    final activeSessionId = repository.getActiveSession()?.id;
 
     // 1. silent load
     // if we are already in loaded state, do not show loading indicator.
@@ -48,6 +49,7 @@ class CalendarCubit extends Cubit<CalendarState> {
           selectedDay: currentState is CalendarLoaded
               ? currentState.selectedDay
               : null,
+          activeMonthId: activeSessionId,
         ),
       );
     } catch (e) {
@@ -56,9 +58,13 @@ class CalendarCubit extends Cubit<CalendarState> {
   }
 
   // select/deselect a day
-  void toggleDaySelection(DateTime day) {
+  void toggleDaySelection(DateTime? day) {
     if (state is CalendarLoaded) {
       final currentState = state as CalendarLoaded;
+      if (day == null) {
+        // deselect the selected day
+        emit(currentState.copyWith(selectedDay: null));
+      }
       if (isSameDay(currentState.selectedDay, day)) {
         // already selected -> deselect
         emit(currentState.copyWith(selectedDay: null));

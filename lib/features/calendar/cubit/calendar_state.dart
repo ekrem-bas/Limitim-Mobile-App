@@ -15,11 +15,13 @@ final class CalendarLoaded extends CalendarState {
   final DateTime focusedMonth;
   final DateTime? selectedDay;
   final List<Expense> allMonthExpenses;
+  final String? activeMonthId;
 
   const CalendarLoaded({
     required this.focusedMonth,
     this.selectedDay,
     required this.allMonthExpenses,
+    this.activeMonthId,
   });
 
   @override
@@ -29,12 +31,14 @@ final class CalendarLoaded extends CalendarState {
     DateTime? focusedMonth,
     DateTime? selectedDay,
     List<Expense>? allMonthExpenses,
+    String? activeMonthId,
   }) {
     return CalendarLoaded(
       focusedMonth: focusedMonth ?? this.focusedMonth,
       selectedDay:
           selectedDay, // allow null to deselect day (?? this.selectedDay removed)
       allMonthExpenses: allMonthExpenses ?? this.allMonthExpenses,
+      activeMonthId: activeMonthId ?? this.activeMonthId,
     );
   }
 

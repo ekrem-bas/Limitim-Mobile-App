@@ -67,6 +67,8 @@ class CalendarScreen extends StatelessWidget {
       // on month changed (fetch the data from repository)
       onPageChanged: (focusedDay) {
         context.read<CalendarCubit>().loadMonth(focusedDay);
+        // also restart the selected day when month changes
+        context.read<CalendarCubit>().toggleDaySelection(null);
       },
       locale: "tr_TR",
       startingDayOfWeek: StartingDayOfWeek.monday,
@@ -144,11 +146,28 @@ class CalendarScreen extends StatelessWidget {
       return _buildNoExpenseInMonth(noExpensesInMonth);
     }
 
+    // if the expense is in the active month user can edit it by tapping on the expense item. otherwise, the expense is read-only.
+    bool checkIsReadOnly(expense) {
+      String activeMonthId = state.activeMonthId ?? "";
+      if (activeMonthId.isEmpty) {
+        return true; // if there is no active month, all expenses are read-only
+      }
+      
+      if (expense.monthId == activeMonthId) {
+        return false; // expense is in the active month -> editable
+      } else {
+        return true; // expense not in the active month -> read-only
+      }
+    }
+
     return ListView.builder(
       padding: const EdgeInsets.symmetric(vertical: 8),
       itemCount: expenses.length,
       itemBuilder: (context, index) {
-        return ExpenseListItem(expense: expenses[index], isReadOnly: true);
+        return ExpenseListItem(
+          expense: expenses[index],
+          isReadOnly: checkIsReadOnly(expenses[index]),
+        );
       },
       physics: const BouncingScrollPhysics(),
     );

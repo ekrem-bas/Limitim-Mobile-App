@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:limitim/features/calendar/cubit/calendar_cubit.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 
 class SaveExpensesSheet extends StatefulWidget {
@@ -48,6 +49,14 @@ class _SaveExpensesSheetState extends State<SaveExpensesSheet> {
         year: _selectedYear,
         customName: customName.isEmpty ? null : customName,
       ),
+    );
+
+    // after finalizing session, reset calendar to the selected month and year to show
+    // the archived expenses immediately
+    // also make sure the activeSessionId is null in calendar state
+    //to make the expenses not editable
+    context.read<CalendarCubit>().loadMonth(
+      DateTime(_selectedYear, _months.indexOf(_selectedMonth)),
     );
 
     Navigator.pop(context);
