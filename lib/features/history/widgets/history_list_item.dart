@@ -4,7 +4,7 @@ import 'package:limitim/core/theme/app_theme.dart';
 import 'package:limitim/core/utils/currency_helper.dart';
 import 'package:limitim/features/history/bloc/history_bloc.dart';
 import 'package:limitim/features/history/models/month.dart';
-import 'package:limitim/features/history/widgets/history_detail_page.dart';
+import 'package:limitim/features/history/widgets/history_detail_view.dart';
 import 'package:limitim/core/widgets/dismissible_card.dart';
 
 class HistoryListItem extends StatelessWidget {
@@ -27,7 +27,7 @@ class HistoryListItem extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => HistoryDetailPage(month: month),
+              builder: (context) => HistoryDetailView(month: month),
             ),
           );
         },

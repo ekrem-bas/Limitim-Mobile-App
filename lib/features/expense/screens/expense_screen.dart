@@ -38,7 +38,11 @@ class ExpenseScreen extends StatelessWidget {
                     IconButton(
                       iconSize: 32,
                       icon: const Icon(Icons.delete_outline, color: Colors.red),
-                      onPressed: () => _showDeleteConfirmation(context),
+                      onPressed: state.expenses.isEmpty
+                          ? () => context.read<SessionBloc>().add(
+                              ResetSessionEvent(),
+                            )
+                          : () => _showDeleteConfirmation(context),
                     ),
 
                     // save button
@@ -91,7 +95,7 @@ class ExpenseScreen extends StatelessWidget {
           }
 
           if (state is SessionError) {
-            return Center(child: Text(state.message));
+            return _buildErrorView(context, state);
           }
 
           return const SizedBox();
@@ -114,6 +118,38 @@ class ExpenseScreen extends StatelessWidget {
           }
           return const SizedBox();
         },
+      ),
+    );
+  }
+
+  Widget _buildErrorView(BuildContext context, SessionError state) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, color: Colors.red, size: 60),
+            const SizedBox(height: 16),
+            Text(state.message, textAlign: TextAlign.center),
+            const SizedBox(height: 20),
+
+            // progress bar to indicate when the error state will end and return to normal
+            TweenAnimationBuilder<double>(
+              duration: state.displayDuration,
+              tween: Tween<double>(begin: 1.0, end: 0.0), // reverse progress
+              builder: (context, value, child) {
+                return LinearProgressIndicator(
+                  value: value,
+                  backgroundColor: Colors.red.withValues(alpha: 0.1),
+                  color: Colors.red,
+                );
+              },
+            ),
+            const SizedBox(height: 8),
+            const Text("Dönem sıfırlanıyor...", style: TextStyle(fontSize: 12)),
+          ],
+        ),
       ),
     );
   }

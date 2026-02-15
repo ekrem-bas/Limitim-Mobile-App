@@ -116,6 +116,28 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
     try {
       // finalize session via repository
       final activeSession = repository.getActiveSession()!;
+
+      // if there is no expense, just reset the session without saving
+      if (repository.getExpensesForMonth(activeSession.id).isEmpty) {
+        await repository.resetActiveSession();
+
+        const errorDuration = Duration(seconds: 3);
+
+        emit(
+          SessionError(
+            "Harcama kaydı bulunamadığı için dönem kaydedilmedi.",
+            displayDuration: errorDuration,
+          ),
+        );
+
+        await Future.delayed(errorDuration);
+
+        if (state is SessionError) {
+          emit(NoActiveSession());
+        }
+        return;
+      }
+
       await repository.finalizeSession(
         monthId: activeSession.id,
         finalName: event.monthName,

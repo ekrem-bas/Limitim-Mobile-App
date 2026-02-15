@@ -30,8 +30,12 @@ final class SessionActive extends SessionState {
 
 final class SessionError extends SessionState {
   final String message;
-  const SessionError(this.message);
+  final Duration displayDuration;
+  const SessionError(
+    this.message, {
+    this.displayDuration = const Duration(seconds: 5),
+  });
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [message, displayDuration];
 }
