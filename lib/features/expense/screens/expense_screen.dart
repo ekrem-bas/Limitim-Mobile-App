@@ -79,6 +79,7 @@ class ExpenseScreen extends StatelessWidget {
                   onTap: () => _showSetLimit(
                     context,
                     initialLimit: state.activeMonth.limit,
+                    initialAutoRollover: state.activeMonth.autoRollover,
                   ),
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 5),
@@ -182,7 +183,11 @@ class ExpenseScreen extends StatelessWidget {
     );
   }
 
-  void _showSetLimit(BuildContext context, {double? initialLimit}) {
+  void _showSetLimit(
+    BuildContext context, {
+    double? initialLimit,
+    bool initialAutoRollover = false,
+  }) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // required for keyboard to push the sheet up
@@ -190,7 +195,10 @@ class ExpenseScreen extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => SetLimitSheet(initialLimit: initialLimit),
+      builder: (context) => SetLimitSheet(
+        initialLimit: initialLimit,
+        initialAutoRollover: initialAutoRollover,
+      ),
     );
   }
 

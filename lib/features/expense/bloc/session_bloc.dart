@@ -20,19 +20,34 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
     on<ResetSessionEvent>(_onResetSession);
     on<UpdateSessionLimit>(_onUpdateSessionLimit);
     on<UpdateExpenseEvent>(_onUpdateExpenseEvent);
+    on<AutoRolloverTriggered>(_onAutoRolloverTriggered);
 
     // check active session when app starts
     add(CheckActiveSession());
   }
 
+  /// Duration for auto-rollover period (30 days)
+  static const rolloverDuration = Duration(days: 30);
+
   FutureOr<void> _onCheckActiveSession(
     CheckActiveSession event,
     Emitter<SessionState> emit,
-  ) {
+  ) async {
     // check if the session is active
     try {
       if (repository.getActiveSession() != null) {
         final activeSession = repository.getActiveSession()!;
+
+        // Check if auto-rollover is enabled and 30 days have passed
+        if (activeSession.autoRollover) {
+          final endDate = activeSession.createdAt.add(rolloverDuration);
+          if (DateTime.now().isAfter(endDate)) {
+            // 30 days have passed, trigger auto-rollover
+            add(AutoRolloverTriggered());
+            return;
+          }
+        }
+
         final expenses = repository.getExpensesForMonth(activeSession.id);
         final totalSpent = expenses.fold(
           0.0,
@@ -62,7 +77,10 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
   ) async {
     // start a new session
     try {
-      await repository.startNewSession(event.limit);
+      await repository.startNewSession(
+        event.limit,
+        autoRollover: event.autoRollover,
+      );
 
       // call check active session to refresh state
       add(CheckActiveSession());
@@ -178,6 +196,9 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
         // update session limit via repository
         await repository.updateActiveSessionLimit(event.newLimit);
 
+        // update auto-rollover setting
+        await repository.updateAutoRollover(event.autoRollover);
+
         // call check active session to refresh state
         add(CheckActiveSession());
       } catch (e) {
@@ -200,6 +221,21 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
       } catch (e) {
         emit(SessionError('Failed to update expense: $e'));
       }
+    }
+  }
+
+  /// Handles auto-rollover: archives current session and starts a new one
+  FutureOr<void> _onAutoRolloverTriggered(
+    AutoRolloverTriggered event,
+    Emitter<SessionState> emit,
+  ) async {
+    try {
+      await repository.autoRolloverSession();
+
+      // refresh state to load the new session
+      add(CheckActiveSession());
+    } catch (e) {
+      emit(SessionError('Failed to auto-rollover session: $e'));
     }
   }
 }

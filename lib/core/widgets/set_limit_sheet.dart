@@ -7,7 +7,12 @@ import 'package:limitim/features/expense/bloc/session_bloc.dart';
 
 class SetLimitSheet extends StatefulWidget {
   final double? initialLimit;
-  const SetLimitSheet({super.key, this.initialLimit});
+  final bool initialAutoRollover;
+  const SetLimitSheet({
+    super.key,
+    this.initialLimit,
+    this.initialAutoRollover = false,
+  });
 
   @override
   State<SetLimitSheet> createState() => _SetLimitSheetState();
@@ -16,6 +21,7 @@ class SetLimitSheet extends StatefulWidget {
 class _SetLimitSheetState extends State<SetLimitSheet> {
   final _limitController = TextEditingController();
   String? _limitError;
+  late bool _autoRollover;
 
   bool get _isEditing => widget.initialLimit != null;
 
@@ -29,10 +35,14 @@ class _SetLimitSheetState extends State<SetLimitSheet> {
       : "Bu ay için harcayabileceğiniz toplam miktarı giriniz.";
   String get _buttonText => _isEditing ? "Limiti Güncelle" : "Bütçeyi Başlat";
   final String _cancelButtonText = "Vazgeç";
+  final String _autoRolloverTitle = "30 gün sonra otomatik devret";
+  final String _autoRolloverSubtitle =
+      "Süre dolduğunda mevcut dönem arşivlenir ve aynı limitle yeni dönem başlar";
 
   @override
   void initState() {
     super.initState();
+    _autoRollover = widget.initialAutoRollover;
     if (_isEditing && widget.initialLimit != null) {
       // convert initial limit to formatted string
       final String formatted = CurrencyHelper.format(widget.initialLimit!);
@@ -62,9 +72,13 @@ class _SetLimitSheetState extends State<SetLimitSheet> {
       });
     } else {
       if (_isEditing) {
-        context.read<SessionBloc>().add(UpdateSessionLimit(limit));
+        context.read<SessionBloc>().add(
+          UpdateSessionLimit(limit, autoRollover: _autoRollover),
+        );
       } else {
-        context.read<SessionBloc>().add(StartNewSession(limit));
+        context.read<SessionBloc>().add(
+          StartNewSession(limit, autoRollover: _autoRollover),
+        );
       }
       Navigator.pop(context);
     }
@@ -87,7 +101,11 @@ class _SetLimitSheetState extends State<SetLimitSheet> {
           const SizedBox(height: 24),
 
           _limitTextField(),
-          const SizedBox(height: 32),
+          const SizedBox(height: 16),
+
+          // auto-rollover checkbox
+          _autoRolloverCheckbox(context),
+          const SizedBox(height: 24),
 
           // start budget button
           _startButton(context),
@@ -135,6 +153,37 @@ class _SetLimitSheetState extends State<SetLimitSheet> {
         suffixText: _currencySuffix,
         errorText: _limitError,
         border: const OutlineInputBorder(),
+      ),
+    );
+  }
+
+  Widget _autoRolloverCheckbox(BuildContext context) {
+    return CheckboxListTile(
+      value: _autoRollover,
+      onChanged: (value) {
+        setState(() {
+          _autoRollover = value ?? false;
+        });
+      },
+      title: Text(
+        _autoRolloverTitle,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      subtitle: Text(
+        _autoRolloverSubtitle,
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          color: Theme.of(
+            context,
+          ).colorScheme.onSurface.withValues(alpha: 0.5),
+        ),
+      ),
+      contentPadding: EdgeInsets.zero,
+      controlAffinity: ListTileControlAffinity.leading,
+      dense: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
       ),
     );
   }

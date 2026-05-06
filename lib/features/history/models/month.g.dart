@@ -25,13 +25,14 @@ class MonthAdapter extends TypeAdapter<Month> {
       createdAt: fields[5] as DateTime,
       customName: fields[6] as String?,
       totalSpent: fields[7] as double,
+      autoRollover: fields[8] as bool? ?? false,
     );
   }
 
   @override
   void write(BinaryWriter writer, Month obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class MonthAdapter extends TypeAdapter<Month> {
       ..writeByte(6)
       ..write(obj.customName)
       ..writeByte(7)
-      ..write(obj.totalSpent);
+      ..write(obj.totalSpent)
+      ..writeByte(8)
+      ..write(obj.autoRollover);
   }
 
   @override

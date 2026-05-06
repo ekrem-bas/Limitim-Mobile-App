@@ -28,6 +28,9 @@ class Month {
   @HiveField(7)
   final double totalSpent;
 
+  @HiveField(8)
+  final bool autoRollover;
+
   Month({
     required this.id,
     required this.name,
@@ -37,6 +40,7 @@ class Month {
     required this.createdAt,
     this.customName,
     this.totalSpent = 0.0,
+    this.autoRollover = false,
   });
 
   Month copyWith({
@@ -46,6 +50,7 @@ class Month {
     bool? isDraft,
     int? year,
     double? totalSpent,
+    bool? autoRollover,
   }) {
     return Month(
       id: id, // Mevcut ID'yi koru
@@ -56,6 +61,7 @@ class Month {
       createdAt: createdAt,
       customName: customName ?? this.customName,
       totalSpent: totalSpent ?? this.totalSpent,
+      autoRollover: autoRollover ?? this.autoRollover,
     );
   }
 }

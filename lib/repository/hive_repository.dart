@@ -18,13 +18,17 @@ class HiveRepository {
   }
 
   // Start new session with given limit
-  Future<void> startNewSession(double limit) async {
+  Future<void> startNewSession(
+    double limit, {
+    bool autoRollover = false,
+  }) async {
     final newMonth = Month(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       name: "Aktif Oturum",
       limit: limit,
       isDraft: true,
       createdAt: DateTime.now(),
+      autoRollover: autoRollover,
     );
     await _monthBox.put(newMonth.id, newMonth);
   }
@@ -52,6 +56,57 @@ class HiveRepository {
       final updatedMonth = activeSession.copyWith(limit: newLimit);
       await _monthBox.put(updatedMonth.id, updatedMonth);
     }
+  }
+
+  // update active session auto-rollover setting
+  Future<void> updateAutoRollover(bool autoRollover) async {
+    final activeSession = getActiveSession();
+    if (activeSession != null) {
+      final updatedMonth = activeSession.copyWith(
+        autoRollover: autoRollover,
+      );
+      await _monthBox.put(updatedMonth.id, updatedMonth);
+    }
+  }
+
+  // Turkish month names for auto-rollover naming
+  static const List<String> _turkishMonths = [
+    "Ocak",
+    "Şubat",
+    "Mart",
+    "Nisan",
+    "Mayıs",
+    "Haziran",
+    "Temmuz",
+    "Ağustos",
+    "Eylül",
+    "Ekim",
+    "Kasım",
+    "Aralık",
+  ];
+
+  // Auto-rollover: finalize current session with month name and start new one
+  Future<void> autoRolloverSession() async {
+    final activeSession = getActiveSession();
+    if (activeSession == null) return;
+
+    // Determine the month name from session's createdAt
+    final monthName = _turkishMonths[activeSession.createdAt.month - 1];
+    final year = activeSession.createdAt.year;
+
+    // Finalize current session
+    await finalizeSession(
+      monthId: activeSession.id,
+      finalName: monthName,
+      finalYear: year,
+      customName: null, // use default period name (month + year)
+    );
+
+    // Start new session with same limit and autoRollover enabled
+    await startNewSession(
+      activeSession.limit,
+      autoRollover: true,
+    );
   }
 
   // When user finalizes the session, we update the month details

@@ -13,18 +13,20 @@ final class ResetSessionEvent extends SessionEvent {}
 
 final class UpdateSessionLimit extends SessionEvent {
   final double newLimit;
-  const UpdateSessionLimit(this.newLimit);
+  final bool autoRollover;
+  const UpdateSessionLimit(this.newLimit, {required this.autoRollover});
 
   @override
-  List<Object> get props => [newLimit];
+  List<Object> get props => [newLimit, autoRollover];
 }
 
 final class StartNewSession extends SessionEvent {
   final double limit;
-  const StartNewSession(this.limit);
+  final bool autoRollover;
+  const StartNewSession(this.limit, {this.autoRollover = false});
 
   @override
-  List<Object> get props => [limit];
+  List<Object> get props => [limit, autoRollover];
 }
 
 final class AddExpenseEvent extends SessionEvent {
@@ -67,3 +69,6 @@ final class FinalizeSessionEvent extends SessionEvent {
   @override
   List<Object> get props => [monthName, year];
 }
+
+/// Triggered when 30-day auto-rollover period has elapsed
+final class AutoRolloverTriggered extends SessionEvent {}
