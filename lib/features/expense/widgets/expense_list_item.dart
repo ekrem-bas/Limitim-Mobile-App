@@ -8,7 +8,7 @@ import 'package:limitim/features/expense/cubit/expense_detail_cubit.dart';
 import 'package:limitim/features/expense/models/expense.dart';
 import 'package:limitim/core/widgets/dismissible_card.dart';
 import 'package:limitim/features/expense/widgets/expense_detail_sheet.dart';
-import 'package:limitim/repository/hive_repository.dart';
+import 'package:limitim/repository/app_repository.dart';
 
 class ExpenseListItem extends StatelessWidget {
   final Expense expense;
@@ -123,7 +123,7 @@ class ExpenseListItem extends StatelessWidget {
           : BlocProvider(
               // provide ExpenseDetailCubit to the sheet
               create: (context) =>
-                  ExpenseDetailCubit(context.read<HiveRepository>()),
+                  ExpenseDetailCubit(context.read<AppRepository>()),
               child: ExpenseDetailSheet(
                 expense: expense,
                 isReadOnly: isReadOnly,

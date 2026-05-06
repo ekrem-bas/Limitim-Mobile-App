@@ -1,14 +1,16 @@
 import 'package:hive/hive.dart';
 import 'package:limitim/features/expense/models/expense.dart';
 import 'package:limitim/features/history/models/month.dart';
+import 'package:limitim/repository/app_repository.dart';
 
-class HiveRepository {
+class HiveRepository implements AppRepository {
   Box<Month> get _monthBox => Hive.box<Month>('months');
   Box<Expense> get _expenseBox => Hive.box<Expense>('expenses');
 
   // --- SESSION (DRAFT) MANAGEMENT ---
 
   // Is there currently an active spending session (limit set)?
+  @override
   Month? getActiveSession() {
     try {
       return _monthBox.values.firstWhere((month) => month.isDraft == true);
@@ -18,6 +20,7 @@ class HiveRepository {
   }
 
   // Start new session with given limit
+  @override
   Future<void> startNewSession(
     double limit, {
     bool autoRollover = false,
@@ -34,6 +37,7 @@ class HiveRepository {
   }
 
   // delete active session (draft)
+  @override
   Future<void> resetActiveSession() async {
     final activeSession = getActiveSession();
     if (activeSession != null) {
@@ -50,6 +54,7 @@ class HiveRepository {
   }
 
   // update active session limit
+  @override
   Future<void> updateActiveSessionLimit(double newLimit) async {
     final activeSession = getActiveSession();
     if (activeSession != null) {
@@ -59,6 +64,7 @@ class HiveRepository {
   }
 
   // update active session auto-rollover setting
+  @override
   Future<void> updateAutoRollover(bool autoRollover) async {
     final activeSession = getActiveSession();
     if (activeSession != null) {
@@ -86,6 +92,7 @@ class HiveRepository {
   ];
 
   // Auto-rollover: finalize current session with month name and start new one
+  @override
   Future<void> autoRolloverSession() async {
     final activeSession = getActiveSession();
     if (activeSession == null) return;
@@ -110,6 +117,7 @@ class HiveRepository {
   }
 
   // When user finalizes the session, we update the month details
+  @override
   Future<void> finalizeSession({
     required String monthId,
     required String finalName,
@@ -134,38 +142,45 @@ class HiveRepository {
 
   // --- EXPENSE OPERATIONS ---
 
+  @override
   List<Expense> getExpensesForMonth(String monthId) {
     return _expenseBox.values
         .where((expense) => expense.monthId == monthId)
         .toList();
   }
 
+  @override
   List<Expense> getExpensesByMonths(DateTime date) {
     return _expenseBox.values.where((expense) {
       return expense.date.year == date.year && expense.date.month == date.month;
     }).toList();
   }
 
+  @override
   Future<void> addExpense(Expense expense) async {
     await _expenseBox.put(expense.id, expense);
   }
 
+  @override
   Future<void> deleteExpense(String id) async {
     await _expenseBox.delete(id);
   }
 
+  @override
   Future<void> updateExpense(Expense updatedExpense) async {
     await _expenseBox.put(updatedExpense.id, updatedExpense);
   }
 
   // --- CALCULATIONS ---
 
+  @override
   double getTotalSpent(String monthId) {
     return _expenseBox.values
         .where((e) => e.monthId == monthId)
         .fold(0, (sum, item) => sum + item.amount);
   }
 
+  @override
   double getRemainingBudget(String monthId) {
     final month = _monthBox.get(monthId);
     if (month == null) return 0.0;
@@ -175,12 +190,14 @@ class HiveRepository {
 
   // --- HISTORY OPERATIONS ---
 
+  @override
   List<Month> getArchivedMonths() {
     final history = _monthBox.values.where((m) => m.isDraft == false).toList();
     history.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return history;
   }
 
+  @override
   Future<void> deleteArchivedMonth(String monthId) async {
     // Delete the month
     await _monthBox.delete(monthId);
@@ -195,6 +212,7 @@ class HiveRepository {
   }
 
   // --- DELETE ALL DATA ---
+  @override
   Future<void> clearAllData() async {
     await Hive.box<Month>('months').clear();
     await Hive.box<Expense>('expenses').clear();

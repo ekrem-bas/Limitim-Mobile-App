@@ -1,12 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:limitim/features/expense/models/expense.dart';
-import 'package:limitim/repository/hive_repository.dart';
+import 'package:limitim/repository/app_repository.dart';
 
 part 'expense_detail_state.dart';
 
 class ExpenseDetailCubit extends Cubit<ExpenseDetailState> {
-  final HiveRepository repository;
+  final AppRepository repository;
   ExpenseDetailCubit(this.repository) : super(ExpenseDetailInitial());
 
   // update expense

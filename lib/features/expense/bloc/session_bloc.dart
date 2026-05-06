@@ -3,13 +3,13 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:limitim/features/expense/models/expense.dart';
 import 'package:limitim/features/history/models/month.dart';
-import 'package:limitim/repository/hive_repository.dart';
+import 'package:limitim/repository/app_repository.dart';
 
 part 'session_event.dart';
 part 'session_state.dart';
 
 class SessionBloc extends Bloc<SessionEvent, SessionState> {
-  final HiveRepository repository;
+  final AppRepository repository;
   SessionBloc({required this.repository}) : super(SessionLoading()) {
     // event handlers
     on<CheckActiveSession>(_onCheckActiveSession);

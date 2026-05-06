@@ -7,7 +7,7 @@ import 'package:limitim/features/calendar/cubit/calendar_cubit.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 import 'package:limitim/features/history/bloc/history_bloc.dart';
 import 'package:limitim/features/onboarding/cubit/onboarding_cubit.dart';
-import 'package:limitim/repository/hive_repository.dart';
+import 'package:limitim/repository/app_repository.dart';
 
 // DrawerView enum to manage different views in the drawer
 enum DrawerView { main, theme, textSize }
@@ -336,7 +336,7 @@ class _AppDrawerState extends State<AppDrawer> {
       Navigator.pop(context);
 
       // clear the database
-      await context.read<HiveRepository>().clearAllData();
+      await context.read<AppRepository>().clearAllData();
 
       // notify blocs about data clearance
       if (context.mounted) {

@@ -1,13 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:limitim/features/expense/models/expense.dart';
-import 'package:limitim/repository/hive_repository.dart';
+import 'package:limitim/repository/app_repository.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 part 'calendar_state.dart';
 
 class CalendarCubit extends Cubit<CalendarState> {
-  final HiveRepository repository;
+  final AppRepository repository;
   CalendarCubit(this.repository) : super(CalendarInitial());
 
   // load expenses for the focused month (first load or month change)

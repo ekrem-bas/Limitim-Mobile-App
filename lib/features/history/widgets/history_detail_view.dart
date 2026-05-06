@@ -6,7 +6,7 @@ import 'package:limitim/features/export_csv/cubit/export_pdf_cubit.dart';
 import 'package:limitim/features/export_csv/widgets/export_sheet.dart';
 import 'package:limitim/features/history/models/month.dart';
 import 'package:limitim/core/widgets/limit_view.dart';
-import 'package:limitim/repository/hive_repository.dart';
+import 'package:limitim/repository/app_repository.dart';
 
 class HistoryDetailView extends StatelessWidget {
   final Month month;
@@ -19,7 +19,7 @@ class HistoryDetailView extends StatelessWidget {
   Widget build(BuildContext context) {
     // Fetch expenses for the given month
     final List<Expense> expenses = context
-        .read<HiveRepository>()
+        .read<AppRepository>()
         .getExpensesForMonth(month.id);
 
     return BlocProvider(

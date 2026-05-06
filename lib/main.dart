@@ -11,6 +11,7 @@ import 'package:limitim/features/history/bloc/history_bloc.dart';
 import 'package:limitim/features/expense/bloc/session_bloc.dart';
 import 'package:limitim/core/theme/app_theme.dart';
 import 'package:limitim/features/onboarding/cubit/onboarding_cubit.dart';
+import 'package:limitim/repository/app_repository.dart';
 import 'package:limitim/repository/hive_repository.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -33,20 +34,20 @@ Future<void> main() async {
   await initializeDateFormatting("tr_TR", null);
 
   runApp(
-    RepositoryProvider(
+    RepositoryProvider<AppRepository>(
       create: (context) => HiveRepository(),
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
             create: (context) =>
-                SessionBloc(repository: context.read<HiveRepository>()),
+                SessionBloc(repository: context.read<AppRepository>()),
           ),
           BlocProvider(
             create: (context) =>
-                HistoryBloc(repository: context.read<HiveRepository>()),
+                HistoryBloc(repository: context.read<AppRepository>()),
           ),
           BlocProvider(
-            create: (context) => CalendarCubit(context.read<HiveRepository>()),
+            create: (context) => CalendarCubit(context.read<AppRepository>()),
           ),
 
           BlocProvider(create: (context) => ThemeCubit()),
